@@ -11,7 +11,6 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
@@ -29,8 +28,8 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 	@Override
 	public boolean place(IWorld world, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config)
 	{
-		MutableBlockPos mPos = new MutableBlockPos();
-		MutableBlockPos mPosDown = new MutableBlockPos();
+		BlockPos.Mutable mPos = new BlockPos.Mutable();
+		BlockPos.Mutable mPosDown = new BlockPos.Mutable();
 
 		for(int xi = 0; xi < 16; xi++)
 		{

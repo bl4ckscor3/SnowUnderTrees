@@ -51,13 +51,9 @@ public class SnowUnderTrees
 			{
 				if((biome.getPrecipitation() == RainType.SNOW || biomesToAddTo.contains(biome)) && !Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString()))
 				{
-					biome.addFeature(
-							GenerationStage.Decoration.TOP_LAYER_MODIFICATION,
-							Biome.createDecoratedFeature(
-									SNOW_UNDER_TREES,
-									IFeatureConfig.NO_FEATURE_CONFIG,
-									Placement.NOPE,
-									IPlacementConfig.NO_PLACEMENT_CONFIG));
+					biome.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION,
+							SNOW_UNDER_TREES.func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG)
+							.func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG)));
 				}
 			}
 		}
