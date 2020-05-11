@@ -13,29 +13,39 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.server.ChunkHolder;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import sereneseasons.api.season.Season;
+import sereneseasons.api.season.Season.SubSeason;
+import sereneseasons.api.season.SeasonHelper;
+import sereneseasons.season.SeasonHooks;
 
-@EventBusSubscriber(modid=SnowUnderTrees.MODID)
-public class WorldTickHandler
+public class SereneSeasonsHandler
 {
-	@SubscribeEvent
-	public static void onWorldTick(WorldTickEvent event)
+	public static void tryMeltSnowUnderTrees(WorldTickEvent event)
 	{
-		if(event.side == LogicalSide.SERVER)
+		SubSeason subSeason = SeasonHelper.getSeasonState(event.world).getSubSeason();
+		Season season = subSeason.getSeason();
+
+		if(season != Season.WINTER)
 		{
-			if(event.phase == Phase.START && event.world.isRaining() && Configuration.CONFIG.enableWhenSnowing.get())
-			{
-				ServerWorld world = (ServerWorld)event.world;
+			ServerWorld world = (ServerWorld)event.world;
 
-				world.getChunkProvider().chunkManager.getLoadedChunksIterable().forEach(chunkHolder -> {
-					Optional<Chunk> optional = chunkHolder.func_219297_b().getNow(ChunkHolder.UNLOADED_CHUNK).left();
+			world.getChunkProvider().chunkManager.getLoadedChunksIterable().forEach(chunkHolder -> {
+				Optional<Chunk> optional = chunkHolder.func_219297_b().getNow(ChunkHolder.UNLOADED_CHUNK).left();
 
-					if(optional.isPresent() && world.rand.nextInt(16) == 0)
+				if(optional.isPresent())
+				{
+					int meltRandomness;
+
+					switch(subSeason)
+					{
+						case EARLY_SPRING: meltRandomness = 16; break;
+						case MID_SPRING: meltRandomness = 12; break;
+						case LATE_SPRING: meltRandomness = 8; break;
+						default: meltRandomness = 4; break;
+					}
+
+					if(world.rand.nextInt(meltRandomness) == 0)
 					{
 						Chunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
@@ -50,22 +60,20 @@ public class WorldTickHandler
 							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
 							BlockState state = world.getBlockState(pos);
 
-							if(biome.doesSnowGenerate(world, pos) && state.isAir(world, pos))
+							if(state.getBlock() == Blocks.SNOW && SeasonHooks.getBiomeTemperature(world, biome, pos) >= 0.15F)
 							{
 								BlockPos downPos = pos.down();
 								BlockState below = world.getBlockState(downPos);
 
-								world.setBlockState(pos, Blocks.SNOW.getDefaultState());
+								world.setBlockState(pos, Blocks.AIR.getDefaultState());
 
 								if(below.has(SnowyDirtBlock.SNOWY))
-									world.setBlockState(downPos, below.with(SnowyDirtBlock.SNOWY, true), 2);
+									world.setBlockState(downPos, below.with(SnowyDirtBlock.SNOWY, false), 2);
 							}
 						}
 					}
-				});
-			}
-			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
-				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
+				}
+			});
 		}
 	}
 }
