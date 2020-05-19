@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyDirtBlock;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
@@ -53,12 +54,15 @@ public class WorldTickHandler
 							if(biome.doesSnowGenerate(world, pos) && state.isAir(world, pos))
 							{
 								BlockPos downPos = pos.down();
-								BlockState below = world.getBlockState(downPos);
+								BlockState stateBelow = world.getBlockState(downPos);
 
-								world.setBlockState(pos, Blocks.SNOW.getDefaultState());
+								if(stateBelow.isSolidSide(world, downPos, Direction.UP))
+								{
+									world.setBlockState(pos, Blocks.SNOW.getDefaultState());
 
-								if(below.has(SnowyDirtBlock.SNOWY))
-									world.setBlockState(downPos, below.with(SnowyDirtBlock.SNOWY, true), 2);
+									if(stateBelow.has(SnowyDirtBlock.SNOWY))
+										world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+								}
 							}
 						}
 					}
