@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import com.mojang.datafixers.Dynamic;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
@@ -50,14 +51,18 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 
 					if(state.isAir(world, mPos))
 					{
-						BlockState below;
+						BlockState stateBelow;
 
 						mPosDown.setPos(mPos).move(Direction.DOWN);
-						below = world.getBlockState(mPosDown);
-						world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
+						stateBelow = world.getBlockState(mPosDown);
 
-						if(below.has(SnowyDirtBlock.SNOWY))
-							world.setBlockState(mPosDown, below.with(SnowyDirtBlock.SNOWY, true), 2);
+						if(Block.hasSolidSide(stateBelow, world, mPosDown, Direction.UP))
+						{
+							world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
+
+							if(stateBelow.has(SnowyDirtBlock.SNOWY))
+								world.setBlockState(mPosDown, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+						}
 					}
 				}
 			}

@@ -3,7 +3,7 @@ loaderVersion="[28,)" #mandatory
 
 [[mods]] #mandatory
 	modId="snowundertrees" #mandatory
-	version="v1.1" #mandatory
+	version="v1.1.1" #mandatory
 	displayName="Snow Under Trees" #mandatory
 	description='''Adds snow under trees in snowy biomes.''' #mandatory
 	issueTrackerURL="https://github.com/bl4ckscor3/SnowUnderTrees"
