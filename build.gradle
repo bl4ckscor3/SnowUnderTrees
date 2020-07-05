@@ -16,14 +16,14 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '1.15.2-v1.1.1'
+version = '1.16.1-v1.1.1'
 group = 'bl4ckscor3.mod.snowundertrees'
 archivesBaseName = 'snowundertrees'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200507-1.15.1'
+    mappings channel: 'snapshot', version: '20200514-1.16'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	
     runs {
@@ -53,9 +53,9 @@ minecraft {
 
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.77'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.38'
     
-    compileOnly fg.deobf("curse.maven:serene-seasons:2936481");
+    //compileOnly fg.deobf("curse.maven:serene-seasons:2936481");
 }
 
 jar {

@@ -28,7 +28,7 @@ public class SnowUnderTrees
 {
 	public static final String MODID = "snowundertrees";
 	@ObjectHolder(MODID + ":snow_under_trees")
-	public static final Feature<NoFeatureConfig> SNOW_UNDER_TREES = (Feature<NoFeatureConfig>)new SnowUnderTreesFeature(NoFeatureConfig::deserialize).setRegistryName("snow_under_trees");
+	public static final Feature<NoFeatureConfig> SNOW_UNDER_TREES = (Feature<NoFeatureConfig>)new SnowUnderTreesFeature(NoFeatureConfig.field_236558_a_).setRegistryName("snow_under_trees");
 	private static List<Biome> biomesToAddTo = new ArrayList<>();
 
 	public SnowUnderTrees()

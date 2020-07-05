@@ -1,9 +1,8 @@
 package bl4ckscor3.mod.snowundertrees;
 
 import java.util.Random;
-import java.util.function.Function;
 
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,22 +10,22 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.structure.StructureManager;
 
 public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 {
-	public SnowUnderTreesFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> configFactory)
+	public SnowUnderTreesFeature(Codec<NoFeatureConfig> codec)
 	{
-		super(configFactory);
+		super(codec);
 	}
 
 	@Override
-	public boolean place(IWorld world, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config)
+	public boolean func_230362_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) //place
 	{
 		BlockPos.Mutable mPos = new BlockPos.Mutable();
 		BlockPos.Mutable mPosDown = new BlockPos.Mutable();
@@ -58,7 +57,7 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 						{
 							world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
 
-							if(stateBelow.has(SnowyDirtBlock.SNOWY))
+							if(stateBelow.func_235901_b_(SnowyDirtBlock.SNOWY)) //has
 								world.setBlockState(mPosDown, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 						}
 					}
