@@ -15,7 +15,6 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.StructureManager;
 
 public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 {
@@ -25,7 +24,7 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 	}
 
 	@Override
-	public boolean func_230362_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) //place
+	public boolean func_241855_a(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) //place
 	{
 		BlockPos.Mutable mPos = new BlockPos.Mutable();
 		BlockPos.Mutable mPosDown = new BlockPos.Mutable();
@@ -57,7 +56,7 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 						{
 							world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
 
-							if(stateBelow.func_235901_b_(SnowyDirtBlock.SNOWY)) //has
+							if(stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
 								world.setBlockState(mPosDown, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 						}
 					}

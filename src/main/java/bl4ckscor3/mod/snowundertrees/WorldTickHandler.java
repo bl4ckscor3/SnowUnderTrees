@@ -59,8 +59,8 @@ public class WorldTickHandler
 								{
 									world.setBlockState(pos, Blocks.SNOW.getDefaultState());
 
-									if(stateBelow.func_235901_b_(SnowyDirtBlock.SNOWY)) //has
-									world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+									if(stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
+										world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 								}
 							}
 						}
