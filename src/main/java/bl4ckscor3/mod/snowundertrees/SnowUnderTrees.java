@@ -1,6 +1,5 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -10,7 +9,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.RainType;
-import net.minecraft.world.biome.BiomeGenerationSettings;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
@@ -52,23 +50,20 @@ public class SnowUnderTrees
 	}
 
 	@SubscribeEvent
-	public static void onFMLLoadComplete(FMLLoadCompleteEvent event) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	public static void onFMLLoadComplete(FMLLoadCompleteEvent event)
 	{
 		if(Configuration.CONFIG.enableBiomeFeature.get())
 		{
-			Field field = BiomeGenerationSettings.class.getDeclaredField("field_242484_f");
-
-			field.setAccessible(true);
-
 			for(Biome biome : ForgeRegistries.BIOMES)
 			{
 				if((biome.getPrecipitation() == RainType.SNOW || biomesToAddTo.contains(biome)) && !Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString()))
 				{
-					List<List<Supplier<ConfiguredFeature<?,?>>>> list = (List<List<Supplier<ConfiguredFeature<?,?>>>>)field.get(biome.func_242440_e());
+					//bad hack is bad pls keep me alive
+					List<List<Supplier<ConfiguredFeature<?,?>>>> list = biome.func_242440_e().field_242484_f;
 
-					list = list.stream().map(e -> new ArrayList<>(e)).collect(Collectors.toList());
+					list = list.stream().map(e -> new ArrayList<>(e)).collect(Collectors.toList()); //immutable -> mutable
 					list.get(GenerationStage.Decoration.TOP_LAYER_MODIFICATION.ordinal()).add(() -> SNOW_UNDER_TREES);
-					field.set(biome.func_242440_e(), list);
+					biome.func_242440_e().field_242484_f = list;
 				}
 			}
 		}
