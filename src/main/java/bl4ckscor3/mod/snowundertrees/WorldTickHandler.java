@@ -9,6 +9,7 @@ import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
@@ -43,7 +44,8 @@ public class WorldTickHandler
 						int chunkY = chunkPos.getZStart();
 						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = world.getBiome(randomPos);
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString());
+						System.out.println(world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome).toString());
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome).toString());
 
 						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 						{
