@@ -44,7 +44,6 @@ public class WorldTickHandler
 						int chunkY = chunkPos.getZStart();
 						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = world.getBiome(randomPos);
-						System.out.println(world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome).toString());
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome).toString());
 
 						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
