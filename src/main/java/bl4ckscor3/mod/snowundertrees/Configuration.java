@@ -36,7 +36,7 @@ public class Configuration
 				.comment("Set this to false to disable snow under trees when it's snowing.")
 				.define("enable_when_snowing", true);
 		filteredBiomes = builder
-				.comment("Add biome IDs here to exempt biomes from being affected by the mod. You can find the biome ID of the biome you're currently in on the F3 screen.",
+				.comment("Add biome IDs here to exempt biomes from being affected by the mod (surrounded by \"\"). You can find the biome ID of the biome you're currently in on the F3 screen.",
 						"For example, the biome ID of the plains biome looks like this: minecraft:plains")
 				.defineList("filtered_biomes", Lists.newArrayList(), e -> e instanceof String);
 	}

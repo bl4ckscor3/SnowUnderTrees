@@ -2,9 +2,8 @@ package bl4ckscor3.mod.snowundertrees;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;
@@ -16,15 +15,15 @@ import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 @Mod(SnowUnderTrees.MODID)
@@ -35,11 +34,12 @@ public class SnowUnderTrees
 	@ObjectHolder(MODID + ":snow_under_trees")
 	public static final Feature<NoFeatureConfig> SNOW_UNDER_TREES_FEATURE = (Feature<NoFeatureConfig>)new SnowUnderTreesFeature(NoFeatureConfig.field_236558_a_).setRegistryName("snow_under_trees");
 	public static final ConfiguredFeature<?, ?> SNOW_UNDER_TREES = SNOW_UNDER_TREES_FEATURE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG));
-	private static List<Biome> biomesToAddTo = new ArrayList<>();
+	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 
 	public SnowUnderTrees()
 	{
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
+		MinecraftForge.EVENT_BUS.addListener(SnowUnderTrees::onBiomeLoading);
 	}
 
 	@SubscribeEvent
@@ -49,31 +49,18 @@ public class SnowUnderTrees
 		Registry.register(WorldGenRegistries.field_243653_e, "snowundertrees:snow_under_trees", SNOW_UNDER_TREES);
 	}
 
-	@SubscribeEvent
-	public static void onFMLLoadComplete(FMLLoadCompleteEvent event)
+	public static void onBiomeLoading(BiomeLoadingEvent event)
 	{
 		if(Configuration.CONFIG.enableBiomeFeature.get())
 		{
-			for(Biome biome : ForgeRegistries.BIOMES)
-			{
-				if((biome.getPrecipitation() == RainType.SNOW || biomesToAddTo.contains(biome)) && !Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString()))
-				{
-					//bad hack is bad pls keep me alive
-					List<List<Supplier<ConfiguredFeature<?,?>>>> list = biome.func_242440_e().field_242484_f;
-
-					list = list.stream().map(e -> new ArrayList<>(e)).collect(Collectors.toList()); //immutable -> mutable
-					list.get(GenerationStage.Decoration.TOP_LAYER_MODIFICATION.ordinal()).add(() -> SNOW_UNDER_TREES);
-					biome.func_242440_e().field_242484_f = list;
-				}
-			}
+			if((event.getClimate().field_242460_b == RainType.SNOW || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
+				event.getGeneration().func_242510_a(GenerationStage.Decoration.TOP_LAYER_MODIFICATION.ordinal(), () -> SNOW_UNDER_TREES);
 		}
-
-		biomesToAddTo = null;
 	}
 
 	public static void addSnowUnderTrees(Biome biome)
 	{
-		if(!biomesToAddTo.contains(biome))
-			biomesToAddTo.add(biome);
+		if(!biomesToAddTo.contains(biome.getRegistryName()))
+			biomesToAddTo.add(biome.getRegistryName());
 	}
 }

@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[33,)" #mandatory
+loaderVersion="[34,)" #mandatory
 license="GNU GPL v3.0 https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.16/LICENSE"
 
 [[mods]] #mandatory
@@ -14,7 +14,7 @@ license="GNU GPL v3.0 https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.16/LIC
 [[dependencies.snowundertrees]]
     modId="forge"
     mandatory=true
-    versionRange="[33,)"
+    versionRange="[34.0.2,)"
     ordering="NONE"
     side="BOTH"
 
