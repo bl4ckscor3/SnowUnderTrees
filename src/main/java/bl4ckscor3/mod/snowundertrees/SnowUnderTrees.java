@@ -46,15 +46,15 @@ public class SnowUnderTrees
 	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event)
 	{
 		event.getRegistry().register(SNOW_UNDER_TREES_FEATURE);
-		Registry.register(WorldGenRegistries.field_243653_e, "snowundertrees:snow_under_trees", SNOW_UNDER_TREES);
+		Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "snowundertrees:snow_under_trees", SNOW_UNDER_TREES);
 	}
 
 	public static void onBiomeLoading(BiomeLoadingEvent event)
 	{
 		if(Configuration.CONFIG.enableBiomeFeature.get())
 		{
-			if((event.getClimate().field_242460_b == RainType.SNOW || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
-				event.getGeneration().func_242510_a(GenerationStage.Decoration.TOP_LAYER_MODIFICATION.ordinal(), () -> SNOW_UNDER_TREES);
+			if((event.getClimate().precipitation == RainType.SNOW || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
+				event.getGeneration().withFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION.ordinal(), () -> SNOW_UNDER_TREES);
 		}
 	}
 

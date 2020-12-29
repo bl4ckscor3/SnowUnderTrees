@@ -4,3 +4,6 @@
 /.classpath
 /.gradle
 /.settings
+/run
+/logs
+*.launch

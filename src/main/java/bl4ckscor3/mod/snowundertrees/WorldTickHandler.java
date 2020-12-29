@@ -19,6 +19,7 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid=SnowUnderTrees.MODID)
@@ -44,7 +45,7 @@ public class WorldTickHandler
 						int chunkY = chunkPos.getZStart();
 						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = world.getBiome(randomPos);
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome).toString());
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome).toString());
 
 						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 						{
@@ -68,8 +69,8 @@ public class WorldTickHandler
 					}
 				});
 			}
-			//			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
-			//				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
+			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
+				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
 		}
 	}
 }

@@ -24,7 +24,7 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 	}
 
 	@Override
-	public boolean func_241855_a(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) //place
+	public boolean generate(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config)
 	{
 		BlockPos.Mutable mPos = new BlockPos.Mutable();
 		BlockPos.Mutable mPosDown = new BlockPos.Mutable();
