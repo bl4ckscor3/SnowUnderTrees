@@ -42,25 +42,18 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 
 				if(world.getBlockState(mPos).getBlock() instanceof LeavesBlock)
 				{
-					BlockState state;
-
 					mPos.setPos(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
-					state = world.getBlockState(mPos);
 
-					if(state.isAir(world, mPos))
+					if(world.getBiome(mPos).doesSnowGenerate(world, mPos))
 					{
 						BlockState stateBelow;
 
 						mPosDown.setPos(mPos).move(Direction.DOWN);
 						stateBelow = world.getBlockState(mPosDown);
+						world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
 
-						if(stateBelow.isSolidSide(world, mPosDown, Direction.UP))
-						{
-							world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
-
-							if(stateBelow.has(SnowyDirtBlock.SNOWY))
-								world.setBlockState(mPosDown, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
-						}
+						if(stateBelow.has(SnowyDirtBlock.SNOWY))
+							world.setBlockState(mPosDown, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 					}
 				}
 			}
