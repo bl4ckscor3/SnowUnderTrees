@@ -32,7 +32,7 @@ public class SnowUnderTrees
 {
 	public static final String MODID = "snowundertrees";
 	@ObjectHolder(MODID + ":snow_under_trees")
-	public static final Feature<NoFeatureConfig> SNOW_UNDER_TREES_FEATURE = (Feature<NoFeatureConfig>)new SnowUnderTreesFeature(NoFeatureConfig.field_236558_a_).setRegistryName("snow_under_trees");
+	public static final Feature<NoFeatureConfig> SNOW_UNDER_TREES_FEATURE = (Feature<NoFeatureConfig>)new SnowUnderTreesFeature(NoFeatureConfig.CODEC).setRegistryName("snow_under_trees");
 	public static final ConfiguredFeature<?, ?> SNOW_UNDER_TREES = SNOW_UNDER_TREES_FEATURE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG));
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 

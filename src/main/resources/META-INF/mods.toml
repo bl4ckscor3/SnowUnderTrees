@@ -4,7 +4,7 @@ license="GNU GPL v3.0 https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.16/LIC
 
 [[mods]] #mandatory
 	modId="snowundertrees" #mandatory
-	version="v1.1.3" #mandatory
+	version="${version}" #mandatory
 	displayName="Snow Under Trees" #mandatory
 	description='''Adds snow under trees in snowy biomes.''' #mandatory
 	issueTrackerURL="https://github.com/bl4ckscor3/SnowUnderTrees"
