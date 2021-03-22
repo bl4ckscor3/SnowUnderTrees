@@ -29,7 +29,6 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 	public boolean place(IWorld world, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config)
 	{
 		BlockPos.Mutable mPos = new BlockPos.Mutable();
-		BlockPos.Mutable mPosDown = new BlockPos.Mutable();
 
 		for(int xi = 0; xi < 16; xi++)
 		{
@@ -48,12 +47,12 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 					{
 						BlockState stateBelow;
 
-						mPosDown.setPos(mPos).move(Direction.DOWN);
-						stateBelow = world.getBlockState(mPosDown);
 						world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
+						mPos.move(Direction.DOWN);
+						stateBelow = world.getBlockState(mPos);
 
 						if(stateBelow.has(SnowyDirtBlock.SNOWY))
-							world.setBlockState(mPosDown, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+							world.setBlockState(mPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 					}
 				}
 			}
