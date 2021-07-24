@@ -24,7 +24,7 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 	}
 
 	@Override
-	public boolean generate(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config)
+	public boolean place(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config)
 	{
 		BlockPos.Mutable mPos = new BlockPos.Mutable();
 
@@ -35,22 +35,22 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 				int x = pos.getX() + xi;
 				int z = pos.getZ() + zi;
 
-				mPos.setPos(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING, x, z) - 1, z);
+				mPos.set(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING, x, z) - 1, z);
 
 				if(world.getBlockState(mPos).getBlock() instanceof LeavesBlock)
 				{
-					mPos.setPos(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
+					mPos.set(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
 
-					if(world.getBiome(mPos).doesSnowGenerate(world, mPos))
+					if(world.getBiome(mPos).shouldSnow(world, mPos))
 					{
 						BlockState stateBelow;
 
-						world.setBlockState(mPos, Blocks.SNOW.getDefaultState(), 2);
+						world.setBlock(mPos, Blocks.SNOW.defaultBlockState(), 2);
 						mPos.move(Direction.DOWN);
 						stateBelow = world.getBlockState(mPos);
 
 						if(stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-							world.setBlockState(mPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+							world.setBlock(mPos, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
 					}
 				}
 			}

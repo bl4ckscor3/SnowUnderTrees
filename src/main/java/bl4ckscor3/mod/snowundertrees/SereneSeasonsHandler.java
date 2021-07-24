@@ -30,8 +30,8 @@ public class SereneSeasonsHandler
 		{
 			ServerWorld world = (ServerWorld)event.world;
 
-			world.getChunkProvider().chunkManager.getLoadedChunksIterable().forEach(chunkHolder -> {
-				Optional<Chunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_CHUNK).left();
+			world.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
+				Optional<Chunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
 				if(optional.isPresent())
 				{
@@ -45,30 +45,30 @@ public class SereneSeasonsHandler
 						default: meltRandomness = 4; break;
 					}
 
-					if(world.rand.nextInt(meltRandomness) == 0)
+					if(world.random.nextInt(meltRandomness) == 0)
 					{
 						Chunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
-						int chunkX = chunkPos.getXStart();
-						int chunkY = chunkPos.getZStart();
+						int chunkX = chunkPos.getMinBlockX();
+						int chunkY = chunkPos.getMinBlockZ();
 						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = world.getBiome(randomPos);
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString());
 
-						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
+						if(!biomeDisabled && world.getBlockState(world.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
 						{
-							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							BlockPos pos = world.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
 							BlockState state = world.getBlockState(pos);
 
 							if(state.getBlock() == Blocks.SNOW && SeasonHooks.getBiomeTemperature(world, biome, pos) >= 0.15F)
 							{
-								BlockPos downPos = pos.down();
+								BlockPos downPos = pos.below();
 								BlockState below = world.getBlockState(downPos);
 
-								world.setBlockState(pos, Blocks.AIR.getDefaultState());
+								world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 
 								if(below.hasProperty(SnowyDirtBlock.SNOWY))
-									world.setBlockState(downPos, below.with(SnowyDirtBlock.SNOWY, false), 2);
+									world.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
 							}
 						}
 					}

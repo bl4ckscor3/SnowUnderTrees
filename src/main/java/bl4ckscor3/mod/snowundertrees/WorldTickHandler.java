@@ -34,35 +34,35 @@ public class WorldTickHandler
 			{
 				ServerWorld world = (ServerWorld)event.world;
 
-				world.getChunkProvider().chunkManager.getLoadedChunksIterable().forEach(chunkHolder -> {
-					Optional<Chunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_CHUNK).left();
+				world.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
+					Optional<Chunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
-					if(optional.isPresent() && world.rand.nextInt(16) == 0)
+					if(optional.isPresent() && world.random.nextInt(16) == 0)
 					{
 						Chunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
-						int chunkX = chunkPos.getXStart();
-						int chunkY = chunkPos.getZStart();
+						int chunkX = chunkPos.getMinBlockX();
+						int chunkY = chunkPos.getMinBlockZ();
 						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = world.getBiome(randomPos);
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome).toString());
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome).toString());
 
-						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
+						if(!biomeDisabled && world.getBlockState(world.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
 						{
-							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							BlockPos pos = world.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
 							BlockState state = world.getBlockState(pos);
 
-							if(biome.doesSnowGenerate(world, pos) && state.isAir(world, pos))
+							if(biome.shouldSnow(world, pos) && state.isAir(world, pos))
 							{
-								BlockPos downPos = pos.down();
+								BlockPos downPos = pos.below();
 								BlockState stateBelow = world.getBlockState(downPos);
 
-								if(stateBelow.isSolidSide(world, downPos, Direction.UP))
+								if(stateBelow.isFaceSturdy(world, downPos, Direction.UP))
 								{
-									world.setBlockState(pos, Blocks.SNOW.getDefaultState());
+									world.setBlockAndUpdate(pos, Blocks.SNOW.defaultBlockState());
 
 									if(stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-										world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+										world.setBlock(downPos, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
 								}
 							}
 						}
