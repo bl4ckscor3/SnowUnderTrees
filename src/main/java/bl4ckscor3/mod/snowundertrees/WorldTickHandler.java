@@ -51,7 +51,7 @@ public class WorldTickHandler
 							BlockPos pos = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 							BlockState state = world.getBlockState(pos);
 
-							if(biome.shouldSnow(world, pos) && state.isAir(world, pos))
+							if(biome.shouldSnow(world, pos) && state.isAir())
 							{
 								BlockPos downPos = pos.below();
 								BlockState stateBelow = world.getBlockState(downPos);
