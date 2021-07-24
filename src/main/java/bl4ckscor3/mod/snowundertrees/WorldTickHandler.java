@@ -2,24 +2,23 @@ package bl4ckscor3.mod.snowundertrees;
 
 import java.util.Optional;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SnowyDirtBlock;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid=SnowUnderTrees.MODID)
@@ -69,8 +68,8 @@ public class WorldTickHandler
 					}
 				});
 			}
-			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
-				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
+			//			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
+			//				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
 		}
 	}
 }
