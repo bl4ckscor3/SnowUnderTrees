@@ -4,29 +4,29 @@ import java.util.Random;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.SnowyDirtBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
+public class SnowUnderTreesFeature extends Feature<NoneFeatureConfiguration>
 {
-	public SnowUnderTreesFeature(Codec<NoFeatureConfig> codec)
+	public SnowUnderTreesFeature(Codec<NoneFeatureConfiguration> codec)
 	{
 		super(codec);
 	}
 
 	@Override
-	public boolean place(ISeedReader world, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config)
+	public boolean place(WorldGenLevel world, ChunkGenerator generator, Random rand, BlockPos pos, NoneFeatureConfiguration config)
 	{
-		BlockPos.Mutable mPos = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos mPos = new BlockPos.MutableBlockPos();
 
 		for(int xi = 0; xi < 16; xi++)
 		{
@@ -35,11 +35,11 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 				int x = pos.getX() + xi;
 				int z = pos.getZ() + zi;
 
-				mPos.set(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING, x, z) - 1, z);
+				mPos.set(x, world.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) - 1, z);
 
 				if(world.getBlockState(mPos).getBlock() instanceof LeavesBlock)
 				{
-					mPos.set(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
+					mPos.set(x, world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
 
 					if(world.getBiome(mPos).shouldSnow(world, mPos))
 					{
