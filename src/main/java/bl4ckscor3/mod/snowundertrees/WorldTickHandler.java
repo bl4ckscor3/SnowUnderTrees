@@ -59,9 +59,7 @@ public class WorldTickHandler
 
 								if(stateBelow.isSolidSide(world, downPos, Direction.UP))
 								{
-									world.setBlockState(pos, Blocks.SNOW.getDefaultState());
-
-									if(stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
+									if(SnowRealMagicHandler.placeSnow(world, pos) && stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
 										world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 								}
 							}
