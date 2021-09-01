@@ -50,17 +50,15 @@ public class WorldTickHandler
 						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 						{
 							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
-							BlockState state = world.getBlockState(pos);
 
-							if(biome.doesSnowGenerate(world, pos) && state.isAir(world, pos))
+							if(SnowRealMagicHandler.placeSnow(world, pos))
 							{
 								BlockPos downPos = pos.down();
 								BlockState stateBelow = world.getBlockState(downPos);
 
-								if(stateBelow.isSolidSide(world, downPos, Direction.UP))
+								if(stateBelow.isSolidSide(world, downPos, Direction.UP) && stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
 								{
-									if(SnowRealMagicHandler.placeSnow(world, pos) && stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-										world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
+									world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
 								}
 							}
 						}
