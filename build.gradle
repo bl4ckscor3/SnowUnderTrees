@@ -57,6 +57,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.32'
     
     compileOnly fg.deobf("curse.maven:serene-seasons-3152244:3152244");
+    compileOnly fg.deobf("curse.maven:snow-real-magic-308663:3443261");
 }
 
 processResources {  
