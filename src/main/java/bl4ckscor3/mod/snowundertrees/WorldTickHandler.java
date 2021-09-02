@@ -3,7 +3,6 @@ package bl4ckscor3.mod.snowundertrees;
 import java.util.Optional;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.util.Direction;
@@ -19,7 +18,6 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid=SnowUnderTrees.MODID)
@@ -51,21 +49,19 @@ public class WorldTickHandler
 						{
 							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-							if(SnowRealMagicHandler.placeSnow(world, pos))
+							if(SnowUnderTrees.placeSnow(world, pos))
 							{
 								BlockPos downPos = pos.down();
 								BlockState stateBelow = world.getBlockState(downPos);
 
 								if(stateBelow.isSolidSide(world, downPos, Direction.UP) && stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-								{
 									world.setBlockState(downPos, stateBelow.with(SnowyDirtBlock.SNOWY, true), 2);
-								}
 							}
 						}
 					}
 				});
 			}
-			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
+			else if(event.phase == Phase.END && SnowUnderTrees.isSereneSeasonsLoaded())
 				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
 		}
 	}

@@ -1,6 +1,5 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import java.lang.reflect.*;
 import java.util.Random;
 
 import com.mojang.serialization.Codec;
@@ -10,7 +9,7 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.*;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
@@ -41,7 +40,7 @@ public class SnowUnderTreesFeature extends Feature<NoFeatureConfig>
 				{
 					mPos.setPos(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
 
-					if(SnowRealMagicHandler.placeSnow(world, mPos))
+					if(SnowUnderTrees.placeSnow(world, mPos))
 					{
 						BlockState stateBelow;
 						mPos.move(Direction.DOWN);
