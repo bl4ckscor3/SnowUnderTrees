@@ -19,6 +19,7 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid=SnowUnderTrees.MODID)
@@ -68,8 +69,8 @@ public class WorldTickHandler
 					}
 				});
 			}
-			//			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
-			//				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
+			else if(event.phase == Phase.END && ModList.get().isLoaded("sereneseasons"))
+				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
 		}
 	}
 }
