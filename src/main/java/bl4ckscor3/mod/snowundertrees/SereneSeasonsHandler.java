@@ -58,6 +58,15 @@ public class SereneSeasonsHandler
 						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 						{
 							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
+
+							if(SnowUnderTrees.isDynamicTreesLoaded())
+							{
+								pos = DynamicTreesHandler.findGround(world, pos.toMutable());
+
+								if(world.getBlockState(pos).isAir(world, pos)) //need the snow block, not the air above it
+									pos = pos.down();
+							}
+
 							BlockState state = world.getBlockState(pos);
 
 							if(state.getBlock() == Blocks.SNOW && SeasonHooks.getBiomeTemperature(world, biome, pos) >= 0.15F)

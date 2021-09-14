@@ -3,8 +3,8 @@ package bl4ckscor3.mod.snowundertrees;
 import java.util.Optional;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyDirtBlock;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -45,9 +45,12 @@ public class WorldTickHandler
 						Biome biome = world.getBiome(randomPos);
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome).toString());
 
-						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
+						if(!biomeDisabled && world.getBlockState(world.getHeight(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).isIn(BlockTags.LEAVES))
 						{
 							BlockPos pos = world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
+
+							if(SnowUnderTrees.isDynamicTreesLoaded())
+								pos = DynamicTreesHandler.findGround(world, pos.toMutable());
 
 							if(SnowUnderTrees.placeSnow(world, pos))
 							{

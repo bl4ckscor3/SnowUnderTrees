@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = 'v1.2'
+version = 'v1.3'
 group = 'bl4ckscor3.mod.snowundertrees'
 archivesBaseName = 'snowundertrees-1.16.5'
 
@@ -63,8 +63,9 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.3'
     
+    implementation fg.deobf("curse.maven:dynamictrees-252818:3414224");
     implementation fg.deobf("curse.maven:kiwi-303657:3377053"); //snow real magic dependency
-    compileOnly fg.deobf("curse.maven:serene-seasons-3152244:3152244");
+    implementation fg.deobf("curse.maven:serene-seasons-3152244:3152244");
     implementation fg.deobf("curse.maven:snow-real-magic-308663:3443261");
 }
 
