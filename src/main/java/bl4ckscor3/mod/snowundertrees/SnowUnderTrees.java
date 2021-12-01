@@ -3,18 +3,18 @@ package bl4ckscor3.mod.snowundertrees;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.DecoratorConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -33,7 +33,8 @@ public class SnowUnderTrees
 	public static final String MODID = "snowundertrees";
 	@ObjectHolder(MODID + ":snow_under_trees")
 	public static final Feature<NoneFeatureConfiguration> SNOW_UNDER_TREES_FEATURE = (Feature<NoneFeatureConfiguration>)new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC).setRegistryName("snow_under_trees");
-	public static final ConfiguredFeature<?, ?> SNOW_UNDER_TREES = SNOW_UNDER_TREES_FEATURE.configured(FeatureConfiguration.NONE).decorated(FeatureDecorator.NOPE.configured(DecoratorConfiguration.NONE));
+	public static final ConfiguredFeature<?, ?> CONFIGURED_SNOW_UNDER_TREES = SNOW_UNDER_TREES_FEATURE.configured(FeatureConfiguration.NONE);
+	public static final PlacedFeature SNOW_UNDER_TREES = CONFIGURED_SNOW_UNDER_TREES.placed(BiomeFilter.biome());
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 
 	public SnowUnderTrees()
@@ -46,7 +47,8 @@ public class SnowUnderTrees
 	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event)
 	{
 		event.getRegistry().register(SNOW_UNDER_TREES_FEATURE);
-		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, "snowundertrees:snow_under_trees", SNOW_UNDER_TREES);
+		FeatureUtils.register("snowundertrees:snow_under_trees", CONFIGURED_SNOW_UNDER_TREES);
+		PlacementUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES);
 	}
 
 	public static void onBiomeLoading(BiomeLoadingEvent event)
