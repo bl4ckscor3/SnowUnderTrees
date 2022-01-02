@@ -55,7 +55,7 @@ public class SnowUnderTrees
 	{
 		if(Configuration.CONFIG.enableBiomeFeature.get())
 		{
-			if((event.getClimate().precipitation == Precipitation.SNOW || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
+			if((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
 				event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), () -> SNOW_UNDER_TREES);
 		}
 	}
