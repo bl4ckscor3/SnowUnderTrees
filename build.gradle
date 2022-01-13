@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.9'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.19'
     
     compileOnly fg.deobf("curse.maven:serene-seasons-3152244:3582836");
 }
