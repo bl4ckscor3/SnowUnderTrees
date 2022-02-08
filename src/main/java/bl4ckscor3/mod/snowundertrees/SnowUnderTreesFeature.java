@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,11 +40,10 @@ public class SnowUnderTreesFeature extends Feature<NoneFeatureConfiguration>
 				{
 					mPos.set(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
 
-					if(level.getBiome(mPos).shouldSnow(level, mPos))
+					if(SnowUnderTrees.placeSnow(level, mPos))
 					{
 						BlockState stateBelow;
 
-						level.setBlock(mPos, Blocks.SNOW.defaultBlockState(), 2);
 						mPos.move(Direction.DOWN);
 						stateBelow = level.getBlockState(mPos);
 

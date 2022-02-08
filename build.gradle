@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-version = '1.1.6'
+version = '1.2'
 group = 'bl4ckscor3.mod.snowundertrees'
 archivesBaseName = 'snowundertrees-1.18.1'
 
@@ -23,13 +23,16 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 
 
 minecraft {
-    mappings channel: 'parchment', version: '2021.12.19-1.18.1'
+    mappings channel: 'parchment', version: '2022.01.23-1.18.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	
     runs {
         client {
             workingDirectory project.file('run/client')
             property 'forge.logging.console.level', 'debug'
+            //fixes refmap of deps
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 snowundertrees {
@@ -42,6 +45,9 @@ minecraft {
             workingDirectory project.file('run/server')
             property 'forge.logging.console.level', 'debug'
             args '-nogui'
+            //fixes refmap of deps
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 snowundertrees {
@@ -54,14 +60,19 @@ minecraft {
 
 repositories {
     maven {
-        url "https://www.cursemaven.com"
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.19'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.66'
     
-    compileOnly fg.deobf("curse.maven:serene-seasons-3152244:3582836");
+    implementation fg.deobf("curse.maven:kiwi-303657:3623424"); //snow real magic dependency
+    implementation fg.deobf("curse.maven:serene-seasons-3152244:3621343");
+    implementation fg.deobf("curse.maven:snow-real-magic-308663:3633931");
 }
 
 jar {

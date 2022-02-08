@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -28,9 +29,9 @@ public class SereneSeasonsHandler
 
 		if(season != Season.WINTER)
 		{
-			ServerLevel world = (ServerLevel)event.world;
+			ServerLevel level = (ServerLevel)event.world;
 
-			world.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
+			level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 				Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
 				if(optional.isPresent())
@@ -42,35 +43,40 @@ public class SereneSeasonsHandler
 						default -> 4;
 					};
 
-					if(world.random.nextInt(meltRandomness) == 0)
+					if(level.random.nextInt(meltRandomness) == 0)
 					{
 						LevelChunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkY = chunkPos.getMinBlockZ();
-						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Biome biome = world.getBiome(randomPos);
+						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
+						Biome biome = level.getBiome(randomPos);
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString());
 
-						if(!biomeDisabled && world.getBlockState(world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
+						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
 						{
-							BlockPos pos = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
-							BlockState state = world.getBlockState(pos);
+							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							BlockState state = level.getBlockState(pos);
 
-							if(state.getBlock() == Blocks.SNOW && SeasonHooks.getBiomeTemperature(world, biome, pos) >= 0.15F)
+							if(state.getBlock() == Blocks.SNOW && warmEnoughToRain(level, biome, pos))
 							{
 								BlockPos downPos = pos.below();
-								BlockState below = world.getBlockState(downPos);
+								BlockState below = level.getBlockState(downPos);
 
-								world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+								level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 
 								if(below.hasProperty(SnowyDirtBlock.SNOWY))
-									world.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
+									level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
 							}
 						}
 					}
 				}
 			});
 		}
+	}
+
+	public static boolean warmEnoughToRain(WorldGenLevel level, Biome biome, BlockPos pos)
+	{
+		return SeasonHooks.getBiomeTemperature(level, biome, pos) >= 0.15F;
 	}
 }
