@@ -6,6 +6,7 @@ import java.util.function.BiFunction;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -40,9 +40,9 @@ public class SnowUnderTrees
 {
 	public static final String MODID = "snowundertrees";
 	@ObjectHolder(MODID + ":snow_under_trees")
-	public static final Feature<NoneFeatureConfiguration> SNOW_UNDER_TREES_FEATURE = (Feature<NoneFeatureConfiguration>)new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC).setRegistryName("snow_under_trees");
-	public static final ConfiguredFeature<?, ?> CONFIGURED_SNOW_UNDER_TREES = SNOW_UNDER_TREES_FEATURE.configured(FeatureConfiguration.NONE);
-	public static final PlacedFeature SNOW_UNDER_TREES = CONFIGURED_SNOW_UNDER_TREES.placed(BiomeFilter.biome());
+	public static final Feature<NoneFeatureConfiguration> SNOW_UNDER_TREES_FEATURE = null;
+	public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> snowUnderTreesConfiguredFeature;
+	public static Holder<PlacedFeature> snowUnderTreesPlacedFeature;
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> snowPlaceFunction;
@@ -75,17 +75,17 @@ public class SnowUnderTrees
 		}
 
 		if(isSereneSeasonsLoaded) {
-			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos), pos);}
+			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos).value(), pos);}
 		else
-			temperatureCheck = (level, pos) -> !level.getBiome(pos).warmEnoughToRain(pos);
+			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos);
 	}
 
 	@SubscribeEvent
 	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event)
 	{
-		event.getRegistry().register(SNOW_UNDER_TREES_FEATURE);
-		FeatureUtils.register("snowundertrees:snow_under_trees", CONFIGURED_SNOW_UNDER_TREES);
-		PlacementUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES);
+		event.getRegistry().register(new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC).setRegistryName("snow_under_trees"));
+		snowUnderTreesConfiguredFeature = FeatureUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES_FEATURE);
+		snowUnderTreesPlacedFeature = PlacementUtils.register("snowundertrees:snow_under_trees", snowUnderTreesConfiguredFeature, BiomeFilter.biome());
 	}
 
 	public static void onBiomeLoading(BiomeLoadingEvent event)
@@ -93,7 +93,7 @@ public class SnowUnderTrees
 		if(Configuration.CONFIG.enableBiomeFeature.get())
 		{
 			if((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
-				event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), () -> SNOW_UNDER_TREES);
+				event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesPlacedFeature);
 		}
 	}
 

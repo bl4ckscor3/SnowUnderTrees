@@ -50,7 +50,8 @@ public class SereneSeasonsHandler
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkY = chunkPos.getMinBlockZ();
 						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Biome biome = level.getBiome(randomPos);
+						Biome biome = level.getBiome(randomPos).value();
+
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString());
 
 						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
