@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ObjectHolder;
 
 @Mod(SnowUnderTrees.MODID)
@@ -84,8 +85,15 @@ public class SnowUnderTrees
 	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event)
 	{
 		event.getRegistry().register(new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC).setRegistryName("snow_under_trees"));
-		snowUnderTreesConfiguredFeature = FeatureUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES_FEATURE);
-		snowUnderTreesPlacedFeature = PlacementUtils.register("snowundertrees:snow_under_trees", snowUnderTreesConfiguredFeature, BiomeFilter.biome());
+	}
+
+	@SubscribeEvent
+	public static void onFMLCommonSetup(FMLCommonSetupEvent event)
+	{
+		event.enqueueWork(() -> {
+			snowUnderTreesConfiguredFeature = FeatureUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES_FEATURE);
+			snowUnderTreesPlacedFeature = PlacementUtils.register("snowundertrees:snow_under_trees", snowUnderTreesConfiguredFeature, BiomeFilter.biome());
+		});
 	}
 
 	public static void onBiomeLoading(BiomeLoadingEvent event)
