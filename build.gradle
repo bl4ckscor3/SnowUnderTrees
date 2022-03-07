@@ -23,7 +23,7 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 
 
 minecraft {
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'parchment', version: '1.18.1-2022.03.06-1.18.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	
     runs {
@@ -68,7 +68,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.1'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.12'
     
     implementation fg.deobf("curse.maven:kiwi-303657:3623424"); //snow real magic dependency
     implementation fg.deobf("curse.maven:serene-seasons-3152244:3621343");
