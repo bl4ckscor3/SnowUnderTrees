@@ -9,7 +9,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,17 +58,22 @@ public class SereneSeasonsHandler
 						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
 						{
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
-							BlockState state = level.getBlockState(pos);
 
-							if(state.getBlock() == Blocks.SNOW && warmEnoughToRain(level, biomeHolder, pos))
+							if(SnowUnderTrees.isSnow(level, pos) && warmEnoughToRain(level, biomeHolder, pos))
 							{
-								BlockPos downPos = pos.below();
-								BlockState below = level.getBlockState(downPos);
+								BlockState stateNow = level.getBlockState(pos);
+								BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
 
-								level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+								if(stateNow != stateAfter)
+								{
+									BlockPos downPos = pos.below();
+									BlockState below = level.getBlockState(downPos);
 
-								if(below.hasProperty(SnowyDirtBlock.SNOWY))
-									level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
+									level.setBlockAndUpdate(pos, stateAfter);
+
+									if(below.hasProperty(SnowyDirtBlock.SNOWY))
+										level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
+								}
 							}
 						}
 					}

@@ -7,6 +7,7 @@ import java.util.function.BiFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.data.models.blockstates.PropertyDispatch.TriFunction;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -48,6 +49,8 @@ public class SnowUnderTrees
 	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> snowPlaceFunction;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> temperatureCheck;
+	private static BiFunction<WorldGenLevel,BlockPos,Boolean> isSnowCheck;
+	private static TriFunction<BlockState,WorldGenLevel,BlockPos,BlockState> stateAfterMeltingGetter;
 
 	public SnowUnderTrees()
 	{
@@ -55,8 +58,12 @@ public class SnowUnderTrees
 		MinecraftForge.EVENT_BUS.addListener(SnowUnderTrees::onBiomeLoading);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 
-		if(ModList.get().isLoaded("snowrealmagic")) {
-			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);}
+		if(ModList.get().isLoaded("snowrealmagic"))
+		{
+			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
+			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
+			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
+		}
 		else
 		{
 			snowPlaceFunction = (level, pos) -> {
@@ -73,6 +80,8 @@ public class SnowUnderTrees
 
 				return false;
 			};
+			isSnowCheck = (level, pos) -> level.getBlockState(pos).getBlock() == Blocks.SNOW;
+			stateAfterMeltingGetter = (stateNow, level, pos) -> Blocks.AIR.defaultBlockState();
 		}
 
 		if(isSereneSeasonsLoaded) {
@@ -127,6 +136,16 @@ public class SnowUnderTrees
 		}
 
 		return false;
+	}
+
+	public static boolean isSnow(WorldGenLevel level, BlockPos pos)
+	{
+		return isSnowCheck.apply(level, pos);
+	}
+
+	public static BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos)
+	{
+		return stateAfterMeltingGetter.apply(stateNow, level, pos);
 	}
 
 	private static final boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos)
