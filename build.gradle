@@ -70,9 +70,9 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.0.12'
     
-    implementation fg.deobf("curse.maven:kiwi-303657:3623424"); //snow real magic dependency
-    implementation fg.deobf("curse.maven:serene-seasons-3152244:3621343");
-    implementation fg.deobf("curse.maven:snow-real-magic-308663:3633931");
+    implementation fg.deobf("curse.maven:kiwi-303657:3680819"); //snow real magic dependency
+    implementation fg.deobf("curse.maven:serene-seasons-3152244:3693807");
+    implementation fg.deobf("curse.maven:snow-real-magic-308663:3680622");
 }
 
 jar {

@@ -3,6 +3,7 @@ package bl4ckscor3.mod.snowundertrees;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -50,7 +51,8 @@ public class SereneSeasonsHandler
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkY = chunkPos.getMinBlockZ();
 						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Biome biome = level.getBiome(randomPos).value();
+						Holder<Biome> biomeHolder = level.getBiome(randomPos);
+						Biome biome = biomeHolder.value();
 
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString());
 
@@ -59,7 +61,7 @@ public class SereneSeasonsHandler
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 							BlockState state = level.getBlockState(pos);
 
-							if(state.getBlock() == Blocks.SNOW && warmEnoughToRain(level, biome, pos))
+							if(state.getBlock() == Blocks.SNOW && warmEnoughToRain(level, biomeHolder, pos))
 							{
 								BlockPos downPos = pos.below();
 								BlockState below = level.getBlockState(downPos);
@@ -76,7 +78,7 @@ public class SereneSeasonsHandler
 		}
 	}
 
-	public static boolean warmEnoughToRain(WorldGenLevel level, Biome biome, BlockPos pos)
+	public static boolean warmEnoughToRain(WorldGenLevel level, Holder<Biome> biome, BlockPos pos)
 	{
 		return SeasonHooks.getBiomeTemperature(level, biome, pos) >= 0.15F;
 	}
