@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -14,18 +17,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -34,18 +33,23 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod(SnowUnderTrees.MODID)
 @EventBusSubscriber(modid=SnowUnderTrees.MODID, bus=Bus.MOD)
 public class SnowUnderTrees
 {
 	public static final String MODID = "snowundertrees";
-	@ObjectHolder(MODID + ":snow_under_trees")
-	public static final Feature<NoneFeatureConfiguration> SNOW_UNDER_TREES_FEATURE = null;
+	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
+	public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, MODID);
+	public static final RegistryObject<SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = FEATURES.register("snow_under_trees", () -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
+	public static final RegistryObject<Codec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.create(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
 	public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> snowUnderTreesConfiguredFeature;
 	public static Holder<PlacedFeature> snowUnderTreesPlacedFeature;
-	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
+	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> snowPlaceFunction;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> temperatureCheck;
@@ -55,14 +59,15 @@ public class SnowUnderTrees
 	public SnowUnderTrees()
 	{
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
-		MinecraftForge.EVENT_BUS.addListener(SnowUnderTrees::onBiomeLoading);
+		FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		BIOME_MODIFIER_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 
 		if(ModList.get().isLoaded("snowrealmagic"))
 		{
-			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
-			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
-			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
+			//			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
+			//			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
+			//			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
 		}
 		else
 		{
@@ -91,33 +96,20 @@ public class SnowUnderTrees
 	}
 
 	@SubscribeEvent
-	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event)
-	{
-		event.getRegistry().register(new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC).setRegistryName("snow_under_trees"));
-	}
-
-	@SubscribeEvent
 	public static void onFMLCommonSetup(FMLCommonSetupEvent event)
 	{
 		event.enqueueWork(() -> {
-			snowUnderTreesConfiguredFeature = FeatureUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES_FEATURE);
+			snowUnderTreesConfiguredFeature = FeatureUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES_FEATURE.get());
 			snowUnderTreesPlacedFeature = PlacementUtils.register("snowundertrees:snow_under_trees", snowUnderTreesConfiguredFeature, BiomeFilter.biome());
 		});
 	}
 
-	public static void onBiomeLoading(BiomeLoadingEvent event)
-	{
-		if(Configuration.CONFIG.enableBiomeFeature.get())
-		{
-			if((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
-				event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesPlacedFeature);
-		}
-	}
-
 	public static void addSnowUnderTrees(Biome biome)
 	{
-		if(!biomesToAddTo.contains(biome.getRegistryName()))
-			biomesToAddTo.add(biome.getRegistryName());
+		ResourceLocation biomeName = ForgeRegistries.BIOMES.getKey(biome);
+
+		if(!biomesToAddTo.contains(biomeName))
+			biomesToAddTo.add(biomeName);
 	}
 
 	public static boolean placeSnow(WorldGenLevel level, BlockPos pos)

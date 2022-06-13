@@ -1,12 +1,12 @@
-modLoader="javafml" #mandatory
-loaderVersion="[38,)" #mandatory
-license="GNU GPL v3.0 https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.18/LICENSE"
+modLoader="javafml"
+loaderVersion="[41,)"
+license="GNU GPL v3.0 https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.19/LICENSE"
 
-[[mods]] #mandatory
-	modId="snowundertrees" #mandatory
-	version="${file.jarVersion}" #mandatory
-	displayName="Snow Under Trees" #mandatory
-	description='''Adds snow under trees in snowy biomes.''' #mandatory
+[[mods]]
+	modId="snowundertrees"
+	version="${file.jarVersion}"
+	displayName="Snow Under Trees"
+	description='''Adds snow under trees in snowy biomes.'''
 	issueTrackerURL="https://github.com/bl4ckscor3/SnowUnderTrees"
 	displayURL="https://www.curseforge.com/minecraft/mc-mods/snow-under-trees"
 	authors="bl4ckscor3"
@@ -14,13 +14,13 @@ license="GNU GPL v3.0 https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.18/LIC
 [[dependencies.snowundertrees]]
     modId="forge"
     mandatory=true
-    versionRange="[38,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.snowundertrees]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18,1.19)"
+    versionRange="[1.19,1.20)"
     ordering="NONE"
     side="BOTH"

@@ -4,6 +4,7 @@ buildscript {
         maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
+
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
@@ -16,14 +17,14 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = '1.2.1'
 group = 'bl4ckscor3.mod.snowundertrees'
-archivesBaseName = 'snowundertrees-1.18.2'
+archivesBaseName = 'snowundertrees-1.19'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 
 minecraft {
-    mappings channel: 'parchment', version: '2022.03.13-1.18.2'
+    mappings channel: 'parchment', version: '1.18.2-2022.06.05-1.19'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	
     runs {
@@ -68,11 +69,11 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.15'
+    minecraft 'net.minecraftforge:forge:1.19-41.0.21'
     
-    implementation fg.deobf("curse.maven:kiwi-303657:3680819"); //snow real magic dependency
-    implementation fg.deobf("curse.maven:serene-seasons-3152244:3693807");
-    implementation fg.deobf("curse.maven:snow-real-magic-308663:3680622");
+    //implementation fg.deobf("curse.maven:kiwi-303657:3680819"); //snow real magic dependency
+    implementation fg.deobf("curse.maven:serene-seasons-291874:3829993");
+    //implementation fg.deobf("curse.maven:snow-real-magic-308663:3680622");
 }
 
 jar {
