@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.TickEvent.WorldTickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import sereneseasons.api.season.Season;
 import sereneseasons.api.season.Season.SubSeason;
 import sereneseasons.api.season.SeasonHelper;
@@ -22,14 +22,14 @@ import sereneseasons.season.SeasonHooks;
 
 public class SereneSeasonsHandler
 {
-	public static void tryMeltSnowUnderTrees(WorldTickEvent event)
+	public static void tryMeltSnowUnderTrees(LevelTickEvent event)
 	{
-		SubSeason subSeason = SeasonHelper.getSeasonState(event.world).getSubSeason();
+		SubSeason subSeason = SeasonHelper.getSeasonState(event.level).getSubSeason();
 		Season season = subSeason.getSeason();
 
 		if(season != Season.WINTER)
 		{
-			ServerLevel level = (ServerLevel)event.world;
+			ServerLevel level = (ServerLevel)event.level;
 
 			level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 				Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();

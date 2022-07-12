@@ -13,23 +13,23 @@ import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid=SnowUnderTrees.MODID)
-public class WorldTickHandler
+public class LevelTickHandler
 {
 	@SubscribeEvent
-	public static void onWorldTick(WorldTickEvent event)
+	public static void onWorldTick(LevelTickEvent event)
 	{
 		if(event.side == LogicalSide.SERVER)
 		{
-			if(event.phase == Phase.START && event.world.isRaining() && Configuration.CONFIG.enableWhenSnowing.get())
+			if(event.phase == Phase.START && event.level.isRaining() && Configuration.CONFIG.enableWhenSnowing.get())
 			{
-				ServerLevel world = (ServerLevel)event.world;
+				ServerLevel world = (ServerLevel)event.level;
 
 				world.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
