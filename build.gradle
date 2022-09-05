@@ -17,14 +17,14 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = '1.2.2'
 group = 'bl4ckscor3.mod.snowundertrees'
-archivesBaseName = 'snowundertrees-1.19'
+archivesBaseName = 'snowundertrees-1.19.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 
 minecraft {
-    mappings channel: 'parchment', version: '1.18.2-2022.07.03-1.19'
+    mappings channel: 'parchment', version: '2022.09.04-1.19.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	
     runs {
@@ -69,10 +69,10 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.94'
+    minecraft 'net.minecraftforge:forge:1.19.2-43.1.16'
     
     //implementation fg.deobf("curse.maven:kiwi-303657:3680819"); //snow real magic dependency
-    implementation fg.deobf("curse.maven:serene-seasons-291874:3829993");
+    implementation fg.deobf("curse.maven:serene-seasons-291874:3926300");
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3680622");
 }
 
