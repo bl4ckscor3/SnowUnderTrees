@@ -6,10 +6,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -55,9 +55,17 @@ public class SereneSeasonsHandler
 
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biome.getRegistryName().toString());
 
-						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
+						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES))
 						{
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+
+							if(SnowUnderTrees.isDynamicTreesLoaded())
+							{
+								pos = DynamicTreesHandler.findGround(level, pos.mutable());
+
+								if(level.getBlockState(pos).isAir()) //need the snow block, not the air above it
+									pos = pos.below();
+							}
 
 							if(SnowUnderTrees.isSnow(level, pos) && warmEnoughToRain(level, biomeHolder, pos))
 							{

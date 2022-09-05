@@ -47,6 +47,7 @@ public class SnowUnderTrees
 	public static Holder<PlacedFeature> snowUnderTreesPlacedFeature;
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static boolean isSereneSeasonsLoaded;
+	private static boolean isDynamicTreesLoaded;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> snowPlaceFunction;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> temperatureCheck;
 	private static BiFunction<WorldGenLevel,BlockPos,Boolean> isSnowCheck;
@@ -57,6 +58,7 @@ public class SnowUnderTrees
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
 		MinecraftForge.EVENT_BUS.addListener(SnowUnderTrees::onBiomeLoading);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
+		isDynamicTreesLoaded = ModList.get().isLoaded("dynamictrees");
 
 		if(ModList.get().isLoaded("snowrealmagic"))
 		{
@@ -156,5 +158,10 @@ public class SnowUnderTrees
 	public static boolean isSereneSeasonsLoaded()
 	{
 		return isSereneSeasonsLoaded;
+	}
+
+	public static boolean isDynamicTreesLoaded()
+	{
+		return isDynamicTreesLoaded;
 	}
 }
