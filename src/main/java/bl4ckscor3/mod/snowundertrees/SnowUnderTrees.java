@@ -65,9 +65,9 @@ public class SnowUnderTrees
 
 		if(ModList.get().isLoaded("snowrealmagic"))
 		{
-			//			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
-			//			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
-			//			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
+			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
+			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
+			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
 		}
 		else
 		{
