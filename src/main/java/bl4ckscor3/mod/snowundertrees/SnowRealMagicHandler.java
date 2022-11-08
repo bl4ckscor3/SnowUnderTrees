@@ -9,29 +9,25 @@ import snownee.snow.SnowCommonConfig;
 import snownee.snow.block.ModSnowLayerBlock;
 import snownee.snow.block.SnowVariant;
 
-public class SnowRealMagicHandler
-{
-	public static boolean placeSnow(WorldGenLevel level, BlockPos pos)
-	{
-		if(SnowUnderTrees.canSnow(level, pos))
+public class SnowRealMagicHandler {
+	public static boolean placeSnow(WorldGenLevel level, BlockPos pos) {
+		if (SnowUnderTrees.canSnow(level, pos))
 			return ModSnowLayerBlock.convert(level, pos, level.getBlockState(pos), 1, 2);
 		else
 			return false;
 	}
 
-	public static boolean isSnow(WorldGenLevel level, BlockPos pos)
-	{
+	public static boolean isSnow(WorldGenLevel level, BlockPos pos) {
 		Block block = level.getBlockState(pos).getBlock();
 
 		return block == Blocks.SNOW || block instanceof SnowVariant;
 	}
 
-	public static BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos)
-	{
-		if(SnowCommonConfig.snowNeverMelt)
+	public static BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos) {
+		if (SnowCommonConfig.snowNeverMelt)
 			return stateNow;
 
-		if(stateNow.getBlock() instanceof SnowVariant snowVariant)
+		if (stateNow.getBlock() instanceof SnowVariant snowVariant)
 			return snowVariant.getRaw(stateNow, level, pos);
 
 		return Blocks.AIR.defaultBlockState();

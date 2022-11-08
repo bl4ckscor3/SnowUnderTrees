@@ -37,9 +37,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ObjectHolder;
 
 @Mod(SnowUnderTrees.MODID)
-@EventBusSubscriber(modid=SnowUnderTrees.MODID, bus=Bus.MOD)
-public class SnowUnderTrees
-{
+@EventBusSubscriber(modid = SnowUnderTrees.MODID, bus = Bus.MOD)
+public class SnowUnderTrees {
 	public static final String MODID = "snowundertrees";
 	@ObjectHolder(MODID + ":snow_under_trees")
 	public static final Feature<NoneFeatureConfiguration> SNOW_UNDER_TREES_FEATURE = null;
@@ -48,33 +47,28 @@ public class SnowUnderTrees
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static boolean isSereneSeasonsLoaded;
 	private static boolean isDynamicTreesLoaded;
-	private static BiFunction<WorldGenLevel,BlockPos,Boolean> snowPlaceFunction;
-	private static BiFunction<WorldGenLevel,BlockPos,Boolean> temperatureCheck;
-	private static BiFunction<WorldGenLevel,BlockPos,Boolean> isSnowCheck;
-	private static TriFunction<BlockState,WorldGenLevel,BlockPos,BlockState> stateAfterMeltingGetter;
+	private static BiFunction<WorldGenLevel, BlockPos, Boolean> snowPlaceFunction;
+	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
+	private static BiFunction<WorldGenLevel, BlockPos, Boolean> isSnowCheck;
+	private static TriFunction<BlockState, WorldGenLevel, BlockPos, BlockState> stateAfterMeltingGetter;
 
-	public SnowUnderTrees()
-	{
+	public SnowUnderTrees() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
 		MinecraftForge.EVENT_BUS.addListener(SnowUnderTrees::onBiomeLoading);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 		isDynamicTreesLoaded = ModList.get().isLoaded("dynamictrees");
 
-		if(ModList.get().isLoaded("snowrealmagic"))
-		{
+		if (ModList.get().isLoaded("snowrealmagic")) {
 			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
 			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
 			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
 		}
-		else
-		{
+		else {
 			snowPlaceFunction = (level, pos) -> {
-				if(canSnow(level, pos))
-				{
+				if (canSnow(level, pos)) {
 					BlockState state = level.getBlockState(pos);
 
-					if(state.isAir() && Blocks.SNOW.defaultBlockState().canSurvive(level, pos))
-					{
+					if (state.isAir() && Blocks.SNOW.defaultBlockState().canSurvive(level, pos)) {
 						level.setBlock(pos, Blocks.SNOW.defaultBlockState(), 2);
 						return true;
 					}
@@ -86,51 +80,44 @@ public class SnowUnderTrees
 			stateAfterMeltingGetter = (stateNow, level, pos) -> Blocks.AIR.defaultBlockState();
 		}
 
-		if(isSereneSeasonsLoaded) {
-			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos), pos);}
+		if (isSereneSeasonsLoaded) {
+			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos), pos);
+		}
 		else
 			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos);
 	}
 
 	@SubscribeEvent
-	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event)
-	{
+	public static void onRegisterFeature(RegistryEvent.Register<Feature<?>> event) {
 		event.getRegistry().register(new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC).setRegistryName("snow_under_trees"));
 	}
 
 	@SubscribeEvent
-	public static void onFMLCommonSetup(FMLCommonSetupEvent event)
-	{
+	public static void onFMLCommonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			snowUnderTreesConfiguredFeature = FeatureUtils.register("snowundertrees:snow_under_trees", SNOW_UNDER_TREES_FEATURE);
 			snowUnderTreesPlacedFeature = PlacementUtils.register("snowundertrees:snow_under_trees", snowUnderTreesConfiguredFeature, BiomeFilter.biome());
 		});
 	}
 
-	public static void onBiomeLoading(BiomeLoadingEvent event)
-	{
-		if(Configuration.CONFIG.enableBiomeFeature.get())
-		{
-			if((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
+	public static void onBiomeLoading(BiomeLoadingEvent event) {
+		if (Configuration.CONFIG.enableBiomeFeature.get()) {
+			if ((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
 				event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesPlacedFeature);
 		}
 	}
 
-	public static void addSnowUnderTrees(Biome biome)
-	{
-		if(!biomesToAddTo.contains(biome.getRegistryName()))
+	public static void addSnowUnderTrees(Biome biome) {
+		if (!biomesToAddTo.contains(biome.getRegistryName()))
 			biomesToAddTo.add(biome.getRegistryName());
 	}
 
-	public static boolean placeSnow(WorldGenLevel level, BlockPos pos)
-	{
+	public static boolean placeSnow(WorldGenLevel level, BlockPos pos) {
 		return snowPlaceFunction.apply(level, pos);
 	}
 
-	public static boolean canSnow(WorldGenLevel level, BlockPos pos)
-	{
-		if(temperatureCheck.apply(level, pos) && isInBuildRangeAndDarkEnough(level, pos))
-		{
+	public static boolean canSnow(WorldGenLevel level, BlockPos pos) {
+		if (temperatureCheck.apply(level, pos) && isInBuildRangeAndDarkEnough(level, pos)) {
 			BlockPos posBelow = pos.below();
 			BlockState stateBelow = level.getBlockState(posBelow);
 
@@ -140,28 +127,23 @@ public class SnowUnderTrees
 		return false;
 	}
 
-	public static boolean isSnow(WorldGenLevel level, BlockPos pos)
-	{
+	public static boolean isSnow(WorldGenLevel level, BlockPos pos) {
 		return isSnowCheck.apply(level, pos);
 	}
 
-	public static BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos)
-	{
+	public static BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos) {
 		return stateAfterMeltingGetter.apply(stateNow, level, pos);
 	}
 
-	private static final boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos)
-	{
+	private static final boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos) {
 		return pos.getY() >= level.getMinBuildHeight() && pos.getY() < level.getMaxBuildHeight() && level.getBrightness(LightLayer.BLOCK, pos) < 10;
 	}
 
-	public static boolean isSereneSeasonsLoaded()
-	{
+	public static boolean isSereneSeasonsLoaded() {
 		return isSereneSeasonsLoaded;
 	}
 
-	public static boolean isDynamicTreesLoaded()
-	{
+	public static boolean isDynamicTreesLoaded() {
 		return isDynamicTreesLoaded;
 	}
 }

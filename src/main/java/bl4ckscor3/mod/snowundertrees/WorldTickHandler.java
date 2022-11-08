@@ -19,23 +19,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(modid=SnowUnderTrees.MODID)
-public class WorldTickHandler
-{
+@EventBusSubscriber(modid = SnowUnderTrees.MODID)
+public class WorldTickHandler {
 	@SubscribeEvent
-	public static void onWorldTick(WorldTickEvent event)
-	{
-		if(event.side == LogicalSide.SERVER)
-		{
-			if(event.phase == Phase.START && event.world.isRaining() && Configuration.CONFIG.enableWhenSnowing.get())
-			{
-				ServerLevel level = (ServerLevel)event.world;
+	public static void onWorldTick(WorldTickEvent event) {
+		if (event.side == LogicalSide.SERVER) {
+			if (event.phase == Phase.START && event.world.isRaining() && Configuration.CONFIG.enableWhenSnowing.get()) {
+				ServerLevel level = (ServerLevel) event.world;
 
 				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
-					if(optional.isPresent() && level.random.nextInt(16) == 0)
-					{
+					if (optional.isPresent() && level.random.nextInt(16) == 0) {
 						LevelChunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
@@ -44,26 +39,24 @@ public class WorldTickHandler
 						Biome biome = level.getBiome(randomPos).value();
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome).toString());
 
-						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES))
-						{
+						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-							if(SnowUnderTrees.isDynamicTreesLoaded())
+							if (SnowUnderTrees.isDynamicTreesLoaded())
 								pos = DynamicTreesHandler.findGround(level, pos.mutable());
 
-							if(SnowUnderTrees.placeSnow(level, pos))
-							{
+							if (SnowUnderTrees.placeSnow(level, pos)) {
 								BlockPos posBelow = pos.below();
 								BlockState stateBelow = level.getBlockState(posBelow);
 
-								if(stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
+								if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
 									level.setBlock(posBelow, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
 							}
 						}
 					}
 				});
 			}
-			else if(event.phase == Phase.END && SnowUnderTrees.isSereneSeasonsLoaded())
+			else if (event.phase == Phase.END && SnowUnderTrees.isSereneSeasonsLoaded())
 				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
 		}
 	}
