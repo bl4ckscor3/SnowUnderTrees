@@ -9,30 +9,23 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.data.models.blockstates.PropertyDispatch.TriFunction;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,8 +39,6 @@ public class SnowUnderTrees {
 	public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, MODID);
 	public static final RegistryObject<SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = FEATURES.register("snow_under_trees", () -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
 	public static final RegistryObject<Codec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.create(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
-	public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> snowUnderTreesConfiguredFeature;
-	public static Holder<PlacedFeature> snowUnderTreesPlacedFeature;
 	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> snowPlaceFunction;
@@ -88,14 +79,6 @@ public class SnowUnderTrees {
 		}
 		else
 			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos);
-	}
-
-	@SubscribeEvent
-	public static void onFMLCommonSetup(FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> {
-			snowUnderTreesConfiguredFeature = FeatureUtils.register(MODID + ":snow_under_trees", SNOW_UNDER_TREES_FEATURE.get());
-			snowUnderTreesPlacedFeature = PlacementUtils.register(MODID + ":snow_under_trees", snowUnderTreesConfiguredFeature, BiomeFilter.biome());
-		});
 	}
 
 	public static void addSnowUnderTrees(Biome biome) {

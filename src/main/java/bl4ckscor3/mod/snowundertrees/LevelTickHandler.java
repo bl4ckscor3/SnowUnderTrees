@@ -3,7 +3,7 @@ package bl4ckscor3.mod.snowundertrees;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -37,7 +37,7 @@ public class LevelTickHandler {
 						int chunkY = chunkPos.getMinBlockZ();
 						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = world.getBiome(randomPos).value();
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome).toString());
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
 
 						if (!biomeDisabled && world.getBlockState(world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock) {
 							BlockPos pos = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
