@@ -20,31 +20,26 @@ import sereneseasons.api.season.Season.SubSeason;
 import sereneseasons.api.season.SeasonHelper;
 import sereneseasons.season.SeasonHooks;
 
-public class SereneSeasonsHandler
-{
-	public static void tryMeltSnowUnderTrees(LevelTickEvent event)
-	{
+public class SereneSeasonsHandler {
+	public static void tryMeltSnowUnderTrees(LevelTickEvent event) {
 		SubSeason subSeason = SeasonHelper.getSeasonState(event.level).getSubSeason();
 		Season season = subSeason.getSeason();
 
-		if(season != Season.WINTER)
-		{
-			ServerLevel level = (ServerLevel)event.level;
+		if (season != Season.WINTER) {
+			ServerLevel level = (ServerLevel) event.level;
 
 			level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 				Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
-				if(optional.isPresent())
-				{
-					int meltRandomness = switch(subSeason) {
+				if (optional.isPresent()) {
+					int meltRandomness = switch (subSeason) {
 						case EARLY_SPRING -> 16;
 						case MID_SPRING -> 12;
 						case LATE_SPRING -> 8;
 						default -> 4;
 					};
 
-					if(level.random.nextInt(meltRandomness) == 0)
-					{
+					if (level.random.nextInt(meltRandomness) == 0) {
 						LevelChunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
@@ -54,23 +49,20 @@ public class SereneSeasonsHandler
 
 						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString());
 
-						if(!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock)
-						{
+						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-							if(SnowUnderTrees.isSnow(level, pos) && warmEnoughToRain(level, biomeHolder, pos))
-							{
+							if (SnowUnderTrees.isSnow(level, pos) && warmEnoughToRain(level, biomeHolder, pos)) {
 								BlockState stateNow = level.getBlockState(pos);
 								BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
 
-								if(stateNow != stateAfter)
-								{
+								if (stateNow != stateAfter) {
 									BlockPos downPos = pos.below();
 									BlockState below = level.getBlockState(downPos);
 
 									level.setBlockAndUpdate(pos, stateAfter);
 
-									if(below.hasProperty(SnowyDirtBlock.SNOWY))
+									if (below.hasProperty(SnowyDirtBlock.SNOWY))
 										level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
 								}
 							}
@@ -81,8 +73,7 @@ public class SereneSeasonsHandler
 		}
 	}
 
-	public static boolean warmEnoughToRain(WorldGenLevel level, Holder<Biome> biome, BlockPos pos)
-	{
+	public static boolean warmEnoughToRain(WorldGenLevel level, Holder<Biome> biome, BlockPos pos) {
 		return SeasonHooks.getBiomeTemperature(level, biome, pos) >= 0.15F;
 	}
 }
