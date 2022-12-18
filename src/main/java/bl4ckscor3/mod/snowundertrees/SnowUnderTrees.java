@@ -74,9 +74,8 @@ public class SnowUnderTrees {
 			stateAfterMeltingGetter = (stateNow, level, pos) -> Blocks.AIR.defaultBlockState();
 		}
 
-		if (isSereneSeasonsLoaded) {
+		if (isSereneSeasonsLoaded)
 			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos), pos);
-		}
 		else
 			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos);
 	}

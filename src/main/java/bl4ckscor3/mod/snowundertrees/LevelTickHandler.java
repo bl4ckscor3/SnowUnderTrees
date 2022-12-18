@@ -25,29 +25,29 @@ public class LevelTickHandler {
 	public static void onWorldTick(LevelTickEvent event) {
 		if (event.side == LogicalSide.SERVER) {
 			if (event.phase == Phase.START && event.level.isRaining() && Configuration.CONFIG.enableWhenSnowing.get()) {
-				ServerLevel world = (ServerLevel) event.level;
+				ServerLevel level = (ServerLevel) event.level;
 
-				world.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
+				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
-					if (optional.isPresent() && world.random.nextInt(16) == 0) {
+					if (optional.isPresent() && level.random.nextInt(16) == 0) {
 						LevelChunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkY = chunkPos.getMinBlockZ();
-						BlockPos randomPos = world.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Biome biome = world.getBiome(randomPos).value();
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(world.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
+						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
+						Biome biome = level.getBiome(randomPos).value();
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
 
-						if (!biomeDisabled && world.getBlockState(world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock) {
-							BlockPos pos = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).getBlock() instanceof LeavesBlock) {
+							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-							if (SnowUnderTrees.placeSnow(world, pos)) {
+							if (SnowUnderTrees.placeSnow(level, pos)) {
 								BlockPos posBelow = pos.below();
-								BlockState stateBelow = world.getBlockState(posBelow);
+								BlockState stateBelow = level.getBlockState(posBelow);
 
 								if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-									world.setBlock(posBelow, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
+									level.setBlock(posBelow, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
 							}
 						}
 					}
