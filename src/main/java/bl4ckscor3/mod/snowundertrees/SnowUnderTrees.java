@@ -7,19 +7,16 @@ import java.util.function.BiFunction;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
+import bl4ckscor3.mod.snowundertrees.manager.SnowRealMagicManager;
+import bl4ckscor3.mod.snowundertrees.manager.VanillaManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.models.blockstates.PropertyDispatch.TriFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -46,11 +43,9 @@ public class SnowUnderTrees {
 	public static final RegistryObject<Codec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.create(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
 	public static final RandomSource RANDOM = RandomSource.create();
 	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
+	public static SnowManager snowManager;
 	private static boolean isSereneSeasonsLoaded;
-	private static BiFunction<WorldGenLevel, BlockPos, Boolean> snowPlaceFunction;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
-	private static BiFunction<WorldGenLevel, BlockPos, Boolean> isSnowCheck;
-	private static TriFunction<BlockState, WorldGenLevel, BlockPos, BlockState> stateAfterMeltingGetter;
 
 	public SnowUnderTrees() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
@@ -58,40 +53,10 @@ public class SnowUnderTrees {
 		BIOME_MODIFIER_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 
-		if (ModList.get().isLoaded("snowrealmagic")) {
-			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
-			isSnowCheck = (level, pos) -> SnowRealMagicHandler.isSnow(level, pos);
-			stateAfterMeltingGetter = (stateNow, level, pos) -> SnowRealMagicHandler.getStateAfterMelting(stateNow, level, pos);
-		}
-		else {
-			snowPlaceFunction = (level, pos) -> {
-				int accumulationHeight = level instanceof Level l ? l.getGameRules().getInt(GameRules.RULE_SNOW_ACCUMULATION_HEIGHT) : 1;
-
-				if (accumulationHeight > 0 && canSnow(level, pos)) {
-					BlockState state = level.getBlockState(pos);
-
-					if (state.is(Blocks.SNOW)) {
-						int currentLayers = state.getValue(SnowLayerBlock.LAYERS);
-
-						if (currentLayers < Math.min(accumulationHeight, 8)) {
-							BlockState snowLayers = state.setValue(SnowLayerBlock.LAYERS, currentLayers + 1);
-
-							Block.pushEntitiesUp(state, snowLayers, level, pos);
-							level.setBlock(pos, snowLayers, 2);
-							return true;
-						}
-					}
-					else {
-						level.setBlock(pos, Blocks.SNOW.defaultBlockState(), 2);
-						return true;
-					}
-				}
-
-				return false;
-			};
-			isSnowCheck = (level, pos) -> level.getBlockState(pos).getBlock() == Blocks.SNOW;
-			stateAfterMeltingGetter = (stateNow, level, pos) -> Blocks.AIR.defaultBlockState();
-		}
+		if (ModList.get().isLoaded("snowrealmagic"))
+			snowManager = new SnowRealMagicManager();
+		else
+			snowManager = new VanillaManager();
 
 		if (isSereneSeasonsLoaded)
 			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos), pos);
@@ -107,7 +72,7 @@ public class SnowUnderTrees {
 	}
 
 	public static boolean placeSnow(WorldGenLevel level, BlockPos pos) {
-		return snowPlaceFunction.apply(level, pos);
+		return snowManager.placeSnow(level, pos);
 	}
 
 	public static boolean canSnow(WorldGenLevel level, BlockPos pos) {
@@ -122,11 +87,11 @@ public class SnowUnderTrees {
 	}
 
 	public static boolean isSnow(WorldGenLevel level, BlockPos pos) {
-		return isSnowCheck.apply(level, pos);
+		return snowManager.isSnow(level, pos);
 	}
 
 	public static BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos) {
-		return stateAfterMeltingGetter.apply(stateNow, level, pos);
+		return snowManager.getStateAfterMelting(stateNow, level, pos);
 	}
 
 	private static final boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos) {
