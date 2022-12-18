@@ -39,7 +39,7 @@ public class SereneSeasonsHandler {
 						default -> 4;
 					};
 
-					if (level.random.nextInt(meltRandomness) == 0) {
+					if (SnowUnderTrees.RANDOM.nextInt(meltRandomness) == 0) {
 						LevelChunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();

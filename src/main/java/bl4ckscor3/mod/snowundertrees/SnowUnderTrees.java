@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.models.blockstates.PropertyDispatch.TriFunction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -43,6 +44,7 @@ public class SnowUnderTrees {
 	public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, MODID);
 	public static final RegistryObject<SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = FEATURES.register("snow_under_trees", () -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
 	public static final RegistryObject<Codec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.create(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
+	public static final RandomSource RANDOM = RandomSource.create();
 	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> snowPlaceFunction;

@@ -30,7 +30,7 @@ public class LevelTickHandler {
 				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 
-					if (optional.isPresent() && level.random.nextInt(16) == 0) {
+					if (optional.isPresent() && SnowUnderTrees.RANDOM.nextInt(16) == 0) {
 						LevelChunk chunk = optional.get();
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
