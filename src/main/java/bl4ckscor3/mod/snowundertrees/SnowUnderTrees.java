@@ -44,7 +44,7 @@ public class SnowUnderTrees {
 	public static final RandomSource RANDOM = RandomSource.create();
 	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	public static SnowManager snowManager;
-	private static boolean isSereneSeasonsLoaded;
+	private static boolean isSereneSeasonsLoaded, isEternalWinterLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
 	public SnowUnderTrees() {
@@ -52,6 +52,7 @@ public class SnowUnderTrees {
 		FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		BIOME_MODIFIER_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
+		isEternalWinterLoaded = ModList.get().isLoaded("eternalwinter");
 
 		if (ModList.get().isLoaded("snowrealmagic"))
 			snowManager = new SnowRealMagicManager();
@@ -100,5 +101,9 @@ public class SnowUnderTrees {
 
 	public static boolean isSereneSeasonsLoaded() {
 		return isSereneSeasonsLoaded;
+	}
+
+	public static boolean isEternalWinterLoaded() {
+		return isEternalWinterLoaded;
 	}
 }
