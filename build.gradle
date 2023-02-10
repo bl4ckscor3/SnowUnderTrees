@@ -68,9 +68,10 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.84'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.2.1'
     
-    implementation fg.deobf("curse.maven:dynamictrees-252818:4066419");
+    implementation fg.deobf("curse.maven:dynamictrees-252818:4191387");
+    implementation fg.deobf("curse.maven:eternal-winter-273891:4256186");
     implementation fg.deobf("curse.maven:kiwi-303657:3990351"); //snow real magic dependency
     implementation fg.deobf("curse.maven:serene-seasons-291874:3804257");
     implementation fg.deobf("curse.maven:snow-real-magic-308663:4027493");

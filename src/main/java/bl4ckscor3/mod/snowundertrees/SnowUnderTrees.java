@@ -45,8 +45,7 @@ public class SnowUnderTrees {
 	public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> snowUnderTreesConfiguredFeature;
 	public static Holder<PlacedFeature> snowUnderTreesPlacedFeature;
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
-	private static boolean isSereneSeasonsLoaded;
-	private static boolean isDynamicTreesLoaded;
+	private static boolean isSereneSeasonsLoaded, isDynamicTreesLoaded, isEternalWinterLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> snowPlaceFunction;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> isSnowCheck;
@@ -57,6 +56,7 @@ public class SnowUnderTrees {
 		MinecraftForge.EVENT_BUS.addListener(SnowUnderTrees::onBiomeLoading);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 		isDynamicTreesLoaded = ModList.get().isLoaded("dynamictrees");
+		isEternalWinterLoaded = ModList.get().isLoaded("eternalwinter");
 
 		if (ModList.get().isLoaded("snowrealmagic")) {
 			snowPlaceFunction = (level, pos) -> SnowRealMagicHandler.placeSnow(level, pos);
@@ -102,7 +102,9 @@ public class SnowUnderTrees {
 
 	public static void onBiomeLoading(BiomeLoadingEvent event) {
 		if (Configuration.CONFIG.enableBiomeFeature.get()) {
-			if ((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString()))
+			boolean isEternalWinterActive = isEternalWinterLoaded && EternalWinterHandler.isActive(event.getName());
+
+			if (isEternalWinterActive || ((event.getClimate().precipitation == Precipitation.SNOW || event.getClimate().temperature < 0.15F || biomesToAddTo.contains(event.getName())) && !Configuration.CONFIG.filteredBiomes.get().contains(event.getName().toString())))
 				event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesPlacedFeature);
 		}
 	}
@@ -145,5 +147,9 @@ public class SnowUnderTrees {
 
 	public static boolean isDynamicTreesLoaded() {
 		return isDynamicTreesLoaded;
+	}
+
+	public static boolean isEternalWinterLoaded() {
+		return isEternalWinterLoaded;
 	}
 }
