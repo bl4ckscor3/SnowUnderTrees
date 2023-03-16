@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -19,7 +18,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 			ClimateSettingsBuilder climate = builder.getClimateSettings();
 			boolean isEternalWinterActive = SnowUnderTrees.isEternalWinterLoaded() && EternalWinterHandler.isActive(biome);
 
-			if (isEternalWinterActive || ((climate.getPrecipitation() == Precipitation.SNOW || climate.getTemperature() < 0.15F || SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is)) && !Configuration.CONFIG.filteredBiomes.get().stream().anyMatch(string -> biome.is(new ResourceLocation(string)))))
+			if (isEternalWinterActive || ((climate.hasPrecipitation() && climate.getTemperature() < 0.15F || SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is)) && !Configuration.CONFIG.filteredBiomes.get().stream().anyMatch(string -> biome.is(new ResourceLocation(string)))))
 				builder.getGenerationSettings().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesFeature);
 		}
 	}

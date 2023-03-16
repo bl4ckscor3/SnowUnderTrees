@@ -17,6 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -77,6 +78,14 @@ public class SnowUnderTrees {
 	}
 
 	public static boolean canSnow(WorldGenLevel level, BlockPos pos) {
+		if (level.getBiome(pos).get().getPrecipitationAt(pos) != Precipitation.SNOW)
+			return false;
+
+		BlockState stateAtPos = level.getBlockState(pos);
+
+		if (!stateAtPos.canBeReplaced())
+			return false;
+
 		if (temperatureCheck.apply(level, pos) && isInBuildRangeAndDarkEnough(level, pos)) {
 			BlockPos posBelow = pos.below();
 			BlockState stateBelow = level.getBlockState(posBelow);
