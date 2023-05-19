@@ -6,15 +6,15 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.snow.Hooks;
 import snownee.snow.SnowCommonConfig;
-import snownee.snow.block.ModSnowLayerBlock;
 import snownee.snow.block.SnowVariant;
 
 public class SnowRealMagicManager implements SnowManager {
 	@Override
 	public boolean placeSnow(WorldGenLevel level, BlockPos pos) {
 		if (SnowUnderTrees.canSnow(level, pos))
-			return ModSnowLayerBlock.convert(level, pos, level.getBlockState(pos), 1, 2);
+			return Hooks.convert(level, pos, level.getBlockState(pos), 1, 2, SnowCommonConfig.placeSnowOnBlockNaturally);
 		else
 			return false;
 	}
