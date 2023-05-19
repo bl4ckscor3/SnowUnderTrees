@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-version = '1.4'
+version = '1.4.1'
 group = 'bl4ckscor3.mod.snowundertrees'
 archivesBaseName = 'snowundertrees-1.19.4'
 
@@ -71,9 +71,9 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.4-45.0.64'
     
-    implementation fg.deobf("curse.maven:eternal-winter-273891:4256188");
+    implementation fg.deobf("curse.maven:eternal-winter-273891:4256188")
     implementation fg.deobf("curse.maven:kiwi-303657:4501836") //snow real magic dependency
-    implementation fg.deobf("curse.maven:serene-seasons-291874:4166545");
+    implementation fg.deobf("curse.maven:serene-seasons-291874:4502525")
     implementation fg.deobf("curse.maven:snow-real-magic-308663:4509187")
 }
 
