@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0,6.2)', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
     }
 }
@@ -17,15 +17,20 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = '1.4.1'
 group = 'bl4ckscor3.mod.snowundertrees'
-archivesBaseName = 'snowundertrees-1.19.4'
+
+base {
+	archivesName = 'snowundertrees-1.20'
+}
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 
 minecraft {
-    mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.19.4'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+	mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
+	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+	copyIdeResources = true
+
 	
     runs {
         client {
@@ -69,22 +74,25 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.4-45.0.64'
+	minecraft 'net.minecraftforge:forge:1.20-46.0.12'
     
     implementation fg.deobf("curse.maven:eternal-winter-273891:4256188")
     implementation fg.deobf("curse.maven:kiwi-303657:4501836") //snow real magic dependency
-    implementation fg.deobf("curse.maven:serene-seasons-291874:4502525")
+    implementation fg.deobf("curse.maven:serene-seasons-291874:4577617")
     implementation fg.deobf("curse.maven:snow-real-magic-308663:4509187")
 }
 
-jar {
+tasks.named('jar', Jar).configure {
     manifest {
         attributes(["Specification-Title": "Snow Under Trees",
                     "Specification-Vendor": "bl4ckscor3",
                     "Specification-Version": "${version}",
                     "Implementation-Title": "Snow Under Trees",
                     "Implementation-Version": "${version}",
-                    "Implementation-Vendor" :"bl4ckscor3",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+                    "Implementation-Vendor": "bl4ckscor3"])
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
