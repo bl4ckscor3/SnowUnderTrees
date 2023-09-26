@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -31,7 +31,7 @@ public class SnowUnderTreesFeature extends Feature<NoneFeatureConfiguration> {
 
 				mPos.set(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) - 1, z);
 
-				if (level.getBlockState(mPos).getBlock() instanceof LeavesBlock) {
+				if (level.getBlockState(mPos).is(BlockTags.LEAVES)) {
 					mPos.set(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
 
 					if (SnowUnderTrees.placeSnow(level, mPos)) {
