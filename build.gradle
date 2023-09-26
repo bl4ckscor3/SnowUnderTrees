@@ -27,7 +27,7 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 
 
 minecraft {
-	mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
+	mappings channel: 'parchment', version: '2023.09.03-1.20.1'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	copyIdeResources = true
 
@@ -74,12 +74,12 @@ repositories {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.20-46.0.12'
-    
-    implementation fg.deobf("curse.maven:eternal-winter-273891:4256188")
-    implementation fg.deobf("curse.maven:kiwi-303657:4501836") //snow real magic dependency
-    implementation fg.deobf("curse.maven:serene-seasons-291874:4577617")
-    implementation fg.deobf("curse.maven:snow-real-magic-308663:4509187")
+	minecraft 'net.minecraftforge:forge:1.20.1-47.1.3'
+
+    implementation fg.deobf("curse.maven:eternal-winter-273891:4711122")
+    implementation fg.deobf("curse.maven:kiwi-303657:4688568") //snow real magic dependency
+    implementation fg.deobf("curse.maven:serene-seasons-291874:4761603")
+    implementation fg.deobf("curse.maven:snow-real-magic-308663:4769110")
 }
 
 tasks.named('jar', Jar).configure {
