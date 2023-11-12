@@ -6,25 +6,25 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
 
 public class Configuration {
-	public static final ForgeConfigSpec CONFIG_SPEC;
+	public static final ModConfigSpec CONFIG_SPEC;
 	public static final Configuration CONFIG;
 	public final BooleanValue enableBiomeFeature;
 	public final BooleanValue enableWhenSnowing;
 	public final ConfigValue<List<? extends String>> filteredBiomes;
 
 	static {
-		Pair<Configuration, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
+		Pair<Configuration, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Configuration::new);
 
 		CONFIG_SPEC = specPair.getRight();
 		CONFIG = specPair.getLeft();
 	}
 
-	Configuration(ForgeConfigSpec.Builder builder) {
+	Configuration(ModConfigSpec.Builder builder) {
 		//@formatter:off
 		enableBiomeFeature = builder
 				.comment("Set this to false to disable snow under trees when first generating chunks.")
