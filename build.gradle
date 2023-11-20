@@ -6,7 +6,7 @@ plugins {
 //	id 'org.parchmentmc.librarian.forgegradle' version '1.+' 
 }
 
-version = '1.4.2'
+version = '1.4.3'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
@@ -44,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.neoforged:neoforge:20.2.48-beta'
+    implementation 'net.neoforged:neoforge:20.2.59-beta'
     //implementation "curse.maven:eternal-winter-273891:4711122"
     //implementation "curse.maven:kiwi-303657:4688568" //snow real magic dependency
     implementation "curse.maven:serene-seasons-291874:4761603"
