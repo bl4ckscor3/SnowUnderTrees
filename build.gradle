@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-version = '1.4.2'
+version = '1.4.3'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
