@@ -22,11 +22,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -45,10 +45,10 @@ public class SnowUnderTrees {
 	private static boolean isSereneSeasonsLoaded, isEternalWinterLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
-	public SnowUnderTrees() {
+	public SnowUnderTrees(IEventBus modEventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
-		FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
-		BIOME_MODIFIER_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		FEATURES.register(modEventBus);
+		BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 		isEternalWinterLoaded = ModList.get().isLoaded("eternalwinter");
 
