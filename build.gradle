@@ -5,7 +5,7 @@ plugins {
 	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-version = '1.4.3'
+version = '1.4.4'
 group = 'bl4ckscor3.mod.snowundertrees'
 archivesBaseName = 'snowundertrees-1.19.4'
 
