@@ -12,11 +12,13 @@ import bl4ckscor3.mod.snowundertrees.manager.SnowRealMagicManager;
 import bl4ckscor3.mod.snowundertrees.manager.VanillaManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -58,7 +60,7 @@ public class SnowUnderTrees {
 			snowManager = new VanillaManager();
 
 		if (isSereneSeasonsLoaded)
-			temperatureCheck = (level, pos) -> !SereneSeasonsHandler.warmEnoughToRain(level, level.getBiome(pos), pos);
+			temperatureCheck = (level, pos) -> SereneSeasonsHandler.coldEnoughToSnow(level, level.getBiome(pos), pos);
 		else
 			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos);
 	}
@@ -73,19 +75,20 @@ public class SnowUnderTrees {
 	}
 
 	public static boolean canSnow(WorldGenLevel level, BlockPos pos) {
-		if (level.getBiome(pos).value().getPrecipitationAt(pos) != Precipitation.SNOW)
-			return false;
+		Holder<Biome> biome = level.getBiome(pos);
 
-		BlockState stateAtPos = level.getBlockState(pos);
+		if (biome.value().getPrecipitationAt(pos) == Precipitation.SNOW || isSereneSeasonsLoaded && SereneSeasonsHandler.coldEnoughToSnow(level, biome, pos)) {
+			BlockState stateAtPos = level.getBlockState(pos);
 
-		if (!stateAtPos.canBeReplaced())
-			return false;
+			if (!stateAtPos.canBeReplaced())
+				return false;
 
-		if (temperatureCheck.apply(level, pos) && isInBuildRangeAndDarkEnough(level, pos)) {
-			BlockPos posBelow = pos.below();
-			BlockState stateBelow = level.getBlockState(posBelow);
+			if (temperatureCheck.apply(level, pos) && isInBuildRangeAndDarkEnough(level, pos)) {
+				BlockPos posBelow = pos.below();
+				BlockState stateBelow = level.getBlockState(posBelow);
 
-			return stateBelow.isFaceSturdy(level, posBelow, Direction.UP);
+				return stateBelow.isFaceSturdy(level, posBelow, Direction.UP);
+			}
 		}
 
 		return false;
