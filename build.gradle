@@ -2,17 +2,17 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.104'
+    id 'net.neoforged.gradle.userdev' version '7.0.105'
 }
 
 version = '1.4.4'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
-	archivesName = 'snowundertrees-1.20.4'
+	archivesName = 'snowundertrees-1.20.6'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -43,10 +43,11 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:20.4.226'
+	implementation 'net.neoforged:neoforge:20.6.42-beta'
     //implementation "curse.maven:eternal-winter-273891:4711122"
+    implementation "curse.maven:glitchcore-955399:5317313" //serene seasons dependency
     //implementation "curse.maven:kiwi-303657:4688568" //snow real magic dependency
-    implementation "curse.maven:serene-seasons-291874:5206533"
+    implementation "curse.maven:serene-seasons-291874:5317323"
     //implementation "curse.maven:snow-real-magic-308663:4769110"
 }
 
@@ -63,4 +64,5 @@ tasks.named('jar', Jar).configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+	options.release = 21
 }

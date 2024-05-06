@@ -1,6 +1,6 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +24,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 	}
 
 	@Override
-	public Codec<? extends BiomeModifier> codec() {
+	public MapCodec<? extends BiomeModifier> codec() {
 		return SnowUnderTrees.SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC.get();
 	}
 }

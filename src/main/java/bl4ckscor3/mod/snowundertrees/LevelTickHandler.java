@@ -1,7 +1,5 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import java.util.Optional;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ChunkHolder;
@@ -14,27 +12,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
-import net.neoforged.neoforge.event.TickEvent.LevelTickEvent;
-import net.neoforged.neoforge.event.TickEvent.Phase;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 @EventBusSubscriber(modid = SnowUnderTrees.MODID)
 public class LevelTickHandler {
 	@SubscribeEvent
-	public static void onWorldTick(LevelTickEvent event) {
-		if (event.side == LogicalSide.SERVER) {
-			if (event.phase == Phase.START && event.level.isRaining() && Configuration.CONFIG.enableWhenSnowing.get()) {
-				ServerLevel level = (ServerLevel) event.level;
+	public static void onWorldTick(LevelTickEvent.Pre event) {
+		if (!event.getLevel().isClientSide) {
+			ServerLevel level = (ServerLevel) event.getLevel();
 
+			if (level.isRaining() && Configuration.CONFIG.enableWhenSnowing.get()) {
 				if (SnowUnderTrees.isSereneSeasonsLoaded() && !SereneSeasonsHandler.generateSnowAndIce())
 					return;
 
 				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
-					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
+					LevelChunk chunk = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).orElse(null);
 
-					if (optional.isPresent() && SnowUnderTrees.RANDOM.nextInt(16) == 0) {
-						LevelChunk chunk = optional.get();
+					if (chunk != null && SnowUnderTrees.RANDOM.nextInt(16) == 0) {
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkY = chunkPos.getMinBlockZ();
@@ -56,8 +51,12 @@ public class LevelTickHandler {
 					}
 				});
 			}
-			else if (event.phase == Phase.END && SnowUnderTrees.isSereneSeasonsLoaded())
-				SereneSeasonsHandler.tryMeltSnowUnderTrees(event);
 		}
+	}
+
+	@SubscribeEvent
+	public static void onWorldTick(LevelTickEvent.Post event) {
+		if (!event.getLevel().isClientSide && SnowUnderTrees.isSereneSeasonsLoaded())
+			SereneSeasonsHandler.tryMeltSnowUnderTrees((ServerLevel) event.getLevel());
 	}
 }

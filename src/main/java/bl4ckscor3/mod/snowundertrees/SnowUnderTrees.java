@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
@@ -25,8 +25,8 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.world.BiomeModifier;
@@ -38,17 +38,17 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries.Keys;
 public class SnowUnderTrees {
 	public static final String MODID = "snowundertrees";
 	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, MODID);
-	public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(Keys.BIOME_MODIFIER_SERIALIZERS, MODID);
+	public static final DeferredRegister<MapCodec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(Keys.BIOME_MODIFIER_SERIALIZERS, MODID);
 	public static final DeferredHolder<Feature<?>, SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = FEATURES.register("snow_under_trees", () -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
-	public static final DeferredHolder<Codec<? extends BiomeModifier>, Codec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.create(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
+	public static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.mapCodec(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
 	public static final RandomSource RANDOM = RandomSource.create();
 	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	public static SnowManager snowManager;
 	private static boolean isSereneSeasonsLoaded, isEternalWinterLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
-	public SnowUnderTrees(IEventBus modEventBus) {
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
+	public SnowUnderTrees(IEventBus modEventBus, ModContainer modContainer) {
+		modContainer.registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
 		FEATURES.register(modEventBus);
 		BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");

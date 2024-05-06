@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[1,)"
-license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.20.2/LICENSE"
+license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.20.6/LICENSE"
 
 [[mods]]
 	modId="snowundertrees"
@@ -13,14 +13,14 @@ license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.20.2/LICENSE"
 
 [[dependencies.snowundertrees]]
     modId="neoforge"
-    mandatory=true
-    versionRange="[20.2.59-beta,)"
+    type="required"
+    versionRange="[20.6-beta,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.snowundertrees]]
     modId="minecraft"
-    mandatory=true
-    versionRange="[1.20.2,1.21)"
+    type="required"
+    versionRange="[1.20.6,1.21)"
     ordering="NONE"
     side="BOTH"
