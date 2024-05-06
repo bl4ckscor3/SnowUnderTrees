@@ -27,6 +27,9 @@ public class LevelTickHandler {
 			if (event.phase == Phase.START && event.level.isRaining() && Configuration.CONFIG.enableWhenSnowing.get()) {
 				ServerLevel level = (ServerLevel) event.level;
 
+				if (SnowUnderTrees.isSereneSeasonsLoaded() && !SereneSeasonsHandler.generateSnowAndIce())
+					return;
+
 				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
 					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
 

@@ -5,7 +5,7 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '7.0.104'
 }
 
-version = '1.4.3'
+version = '1.4.4'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
