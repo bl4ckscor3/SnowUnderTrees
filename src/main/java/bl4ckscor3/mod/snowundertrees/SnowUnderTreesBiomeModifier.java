@@ -18,7 +18,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 			ClimateSettingsBuilder climate = builder.getClimateSettings();
 			boolean isEternalWinterActive = SnowUnderTrees.isEternalWinterLoaded() && EternalWinterHandler.isActive(biome);
 
-			if (isEternalWinterActive || ((climate.hasPrecipitation() && climate.getTemperature() < 0.15F || SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is)) && !Configuration.CONFIG.filteredBiomes.get().stream().anyMatch(string -> biome.is(new ResourceLocation(string)))))
+			if (isEternalWinterActive || ((climate.hasPrecipitation() && climate.getTemperature() < 0.15F || SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is)) && !Configuration.CONFIG.filteredBiomes.get().stream().anyMatch(string -> biome.is(ResourceLocation.parse(string)))))
 				builder.getGenerationSettings().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesFeature);
 		}
 	}
