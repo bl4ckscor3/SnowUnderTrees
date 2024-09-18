@@ -15,12 +15,35 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 	@Override
 	public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
 		if (phase == Phase.ADD && Configuration.CONFIG.enableBiomeFeature.get()) {
-			ClimateSettingsBuilder climate = builder.getClimateSettings();
 			boolean isEternalWinterActive = SnowUnderTrees.isEternalWinterLoaded() && EternalWinterHandler.isActive(biome);
 
-			if (isEternalWinterActive || ((climate.hasPrecipitation() && climate.getTemperature() < 0.15F || SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is)) && !Configuration.CONFIG.filteredBiomes.get().stream().anyMatch(string -> biome.is(ResourceLocation.parse(string)))))
+			if (isEternalWinterActive || shouldAddToBiome(biome, builder.getClimateSettings()))
 				builder.getGenerationSettings().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesFeature);
 		}
+	}
+
+	public boolean shouldAddToBiome(Holder<Biome> biome, ClimateSettingsBuilder climate) {
+		if (isFiltered(biome))
+			return false;
+
+		return isPrecipitationSnow(climate) || isManuallyAdded(biome);
+	}
+
+	public boolean isPrecipitationSnow(ClimateSettingsBuilder climate) {
+		return climate.hasPrecipitation() && climate.getTemperature() < 0.15F;
+	}
+
+	public boolean isManuallyAdded(Holder<Biome> biome) {
+		return SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is);
+	}
+
+	public boolean isFiltered(Holder<Biome> biome) {
+		//@formatter:off
+		return Configuration.CONFIG.filteredBiomes.get()
+				.stream()
+				.map(ResourceLocation::parse)
+				.anyMatch(biome::is);
+		//@formatter:on
 	}
 
 	@Override
