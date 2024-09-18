@@ -24,12 +24,12 @@ runs {
     }
 
     client {
-        workingDirectory project.file('run/client')
+        workingDirectory project.file('runs/client')
     }
 
     server {
-        workingDirectory project.file('run/server')
-        programArgument '-nogui'
+        workingDirectory project.file('runs/server')
+        argument '-nogui'
     }
 }
 
@@ -43,12 +43,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:21.0.4-beta'
+	implementation 'net.neoforged:neoforge:21.1.47'
 
 	//implementation "curse.maven:eternal-winter-273891:4711122"
-	implementation "curse.maven:glitchcore-955399:5317313" //serene seasons dependency
+	implementation "curse.maven:glitchcore-955399:5660740" //serene seasons dependency
 	//implementation "curse.maven:kiwi-303657:4688568" //snow real magic dependency
-	implementation "curse.maven:serene-seasons-291874:5329072"
+	implementation "curse.maven:serene-seasons-291874:5661346"
 	//implementation "curse.maven:snow-real-magic-308663:4769110"
 }
 
