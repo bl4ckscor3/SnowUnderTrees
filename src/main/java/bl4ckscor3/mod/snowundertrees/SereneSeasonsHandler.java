@@ -18,7 +18,7 @@ import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import sereneseasons.api.season.Season;
 import sereneseasons.api.season.Season.SubSeason;
 import sereneseasons.api.season.SeasonHelper;
-import sereneseasons.config.SeasonsConfig;
+import sereneseasons.init.ModConfig;
 import sereneseasons.season.SeasonHooks;
 
 public class SereneSeasonsHandler {
@@ -79,6 +79,6 @@ public class SereneSeasonsHandler {
 	}
 
 	public static boolean generateSnowAndIce() {
-		return SeasonsConfig.generateSnowAndIce.get();
+		return ModConfig.seasons.generateSnowAndIce;
 	}
 }
