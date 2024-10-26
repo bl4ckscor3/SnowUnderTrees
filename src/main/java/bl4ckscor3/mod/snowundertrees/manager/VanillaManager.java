@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class VanillaManager implements SnowManager {
 	@Override
 	public boolean placeSnow(WorldGenLevel level, BlockPos pos) {
-		int accumulationHeight = level instanceof Level l ? l.getGameRules().getInt(GameRules.RULE_SNOW_ACCUMULATION_HEIGHT) : 1;
+		int accumulationHeight = level instanceof Level l ? l.getServer().getGameRules().getInt(GameRules.RULE_SNOW_ACCUMULATION_HEIGHT) : 1;
 
 		if (accumulationHeight > 0 && SnowUnderTrees.canSnow(level, pos)) {
 			BlockState state = level.getBlockState(pos);

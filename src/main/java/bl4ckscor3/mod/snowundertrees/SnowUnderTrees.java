@@ -62,7 +62,7 @@ public class SnowUnderTrees {
 		if (isSereneSeasonsLoaded)
 			temperatureCheck = (level, pos) -> SereneSeasonsHandler.coldEnoughToSnow(level, level.getBiome(pos), pos);
 		else
-			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos);
+			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos, level.getSeaLevel());
 	}
 
 	public static void addSnowUnderTrees(ResourceLocation biomeName) {
@@ -77,7 +77,7 @@ public class SnowUnderTrees {
 	public static boolean canSnow(WorldGenLevel level, BlockPos pos) {
 		Holder<Biome> biome = level.getBiome(pos);
 
-		if (biome.value().getPrecipitationAt(pos) == Precipitation.SNOW || isSereneSeasonsLoaded && SereneSeasonsHandler.coldEnoughToSnow(level, biome, pos)) {
+		if (biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Precipitation.SNOW || isSereneSeasonsLoaded && SereneSeasonsHandler.coldEnoughToSnow(level, biome, pos)) {
 			BlockState stateAtPos = level.getBlockState(pos);
 
 			if (!stateAtPos.canBeReplaced())
@@ -103,7 +103,7 @@ public class SnowUnderTrees {
 	}
 
 	private static final boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos) {
-		return pos.getY() >= level.getMinBuildHeight() && pos.getY() < level.getMaxBuildHeight() && level.getBrightness(LightLayer.BLOCK, pos) < 10;
+		return pos.getY() >= level.getMinY() && pos.getY() <= level.getMaxY() && level.getBrightness(LightLayer.BLOCK, pos) < 10;
 	}
 
 	public static boolean isSereneSeasonsLoaded() {

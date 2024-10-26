@@ -9,7 +9,7 @@ version = '1.4.4'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
-	archivesName = 'snowundertrees-1.21'
+	archivesName = 'snowundertrees-1.21.3'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:21.1.47'
+	implementation 'net.neoforged:neoforge:21.3.3-beta'
 
 	//implementation "curse.maven:eternal-winter-273891:4711122"
 	implementation "curse.maven:glitchcore-955399:5660740" //serene seasons dependency

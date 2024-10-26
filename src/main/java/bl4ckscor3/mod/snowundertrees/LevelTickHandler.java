@@ -35,7 +35,7 @@ public class LevelTickHandler {
 						int chunkY = chunkPos.getMinBlockZ();
 						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
 						Biome biome = level.getBiome(randomPos).value();
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().lookupOrThrow(Registries.BIOME).getKey(biome).toString());
 
 						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
