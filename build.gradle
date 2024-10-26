@@ -5,11 +5,11 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '7.0.+'
 }
 
-version = '1.4.4'
+version = '1.4.5'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
-	archivesName = 'snowundertrees-1.21'
+	archivesName = 'snowundertrees-1.21.1'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -47,9 +47,9 @@ dependencies {
 
 	//implementation "curse.maven:eternal-winter-273891:4711122"
 	implementation "curse.maven:glitchcore-955399:5660740" //serene seasons dependency
-	//implementation "curse.maven:kiwi-303657:4688568" //snow real magic dependency
+	implementation "curse.maven:kiwi-303657:5834412" //snow real magic dependency
 	implementation "curse.maven:serene-seasons-291874:5661346"
-	//implementation "curse.maven:snow-real-magic-308663:4769110"
+	implementation "curse.maven:snow-real-magic-308663:5836534"
 }
 
 tasks.named('jar', Jar).configure {
