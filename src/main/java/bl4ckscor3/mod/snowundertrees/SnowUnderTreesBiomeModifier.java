@@ -34,7 +34,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 	}
 
 	public boolean isManuallyAdded(Holder<Biome> biome) {
-		return SnowUnderTrees.biomesToAddTo.stream().anyMatch(biome::is);
+		return SnowUnderTrees.biomesToAddTo().stream().anyMatch(biome::is);
 	}
 
 	public boolean isFiltered(Holder<Biome> biome) {
