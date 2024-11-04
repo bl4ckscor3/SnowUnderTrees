@@ -3,6 +3,7 @@ package bl4ckscor3.mod.snowundertrees;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,12 +16,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -42,8 +48,8 @@ public class SnowUnderTrees {
 	public static final DeferredHolder<Feature<?>, SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = FEATURES.register("snow_under_trees", () -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
 	public static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.mapCodec(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
 	public static final RandomSource RANDOM = RandomSource.create();
-	public static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
-	public static SnowManager snowManager;
+	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
+	private static SnowManager snowManager;
 	private static boolean isSereneSeasonsLoaded, isEternalWinterLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
@@ -112,5 +118,22 @@ public class SnowUnderTrees {
 
 	public static boolean isEternalWinterLoaded() {
 		return isEternalWinterLoaded;
+	}
+
+	public static void runForChunks(ServerLevel level, Consumer<LevelChunk> action) {
+		ServerChunkCache cache = level.getChunkSource();
+
+		level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(chunk -> {
+			ChunkPos chunkPos = chunk.getPos();
+
+			if ((level.isNaturalSpawningAllowed(chunkPos) && cache.chunkMap.anyPlayerCloseEnoughForSpawning(chunkPos)) || cache.chunkMap.getDistanceManager().shouldForceTicks(chunkPos.toLong())) {
+				if (level.shouldTickBlocksAt(chunkPos.toLong()))
+					action.accept(chunk);
+			}
+		}));
+	}
+
+	public static List<ResourceLocation> biomesToAddTo() {
+		return biomesToAddTo;
 	}
 }
