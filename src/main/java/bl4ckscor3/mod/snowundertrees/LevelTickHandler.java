@@ -6,6 +6,7 @@ import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,30 +27,35 @@ public class LevelTickHandler {
 				if (SnowUnderTrees.isSereneSeasonsLoaded() && !SereneSeasonsHandler.generateSnowAndIce())
 					return;
 
-				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
-					LevelChunk chunk = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).orElse(null);
+				int randomTickSpeed = level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
 
-					if (chunk != null && SnowUnderTrees.RANDOM.nextInt(16) == 0) {
-						ChunkPos chunkPos = chunk.getPos();
-						int chunkX = chunkPos.getMinBlockX();
-						int chunkY = chunkPos.getMinBlockZ();
-						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Biome biome = level.getBiome(randomPos).value();
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
+				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(chunk -> addSnowUnderTrees(level, chunk, randomTickSpeed)));
+			}
+		}
+	}
 
-						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
-							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+	private static void addSnowUnderTrees(ServerLevel level, LevelChunk chunk, int randomTickSpeed) {
+		ChunkPos chunkPos = chunk.getPos();
+		int chunkX = chunkPos.getMinBlockX();
+		int chunkY = chunkPos.getMinBlockZ();
 
-							if (SnowUnderTrees.placeSnow(level, pos)) {
-								BlockPos posBelow = pos.below();
-								BlockState stateBelow = level.getBlockState(posBelow);
+		for (int i = 0; i < randomTickSpeed; i++) {
+			if (SnowUnderTrees.RANDOM.nextInt(48) == 0) {
+				BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
+				Biome biome = level.getBiome(randomPos).value();
+				boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
 
-								if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-									level.setBlock(posBelow, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
-							}
-						}
+				if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
+					BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+
+					if (SnowUnderTrees.placeSnow(level, pos)) {
+						BlockPos posBelow = pos.below();
+						BlockState stateBelow = level.getBlockState(posBelow);
+
+						if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
+							level.setBlock(posBelow, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
 					}
-				});
+				}
 			}
 		}
 	}
