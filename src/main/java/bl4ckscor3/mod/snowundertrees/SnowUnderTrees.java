@@ -17,8 +17,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -125,7 +127,16 @@ public class SnowUnderTrees {
 	}
 
 	public static void runForChunks(ServerLevel level, Consumer<LevelChunk> action) {
-		chunkRunner.run(level, action);
+		ServerChunkCache cache = level.getChunkSource();
+
+		chunkRunner.run(level, chunk -> {
+			ChunkPos chunkPos = chunk.getPos();
+
+			if ((level.isNaturalSpawningAllowed(chunkPos) && cache.chunkMap.anyPlayerCloseEnoughForSpawning(chunkPos)) || cache.chunkMap.getDistanceManager().shouldForceTicks(chunkPos.toLong())) {
+				if (level.shouldTickBlocksAt(chunkPos.toLong()))
+					action.accept(chunk);
+			}
+		});
 	}
 
 	public static List<ResourceLocation> biomesToAddTo() {
