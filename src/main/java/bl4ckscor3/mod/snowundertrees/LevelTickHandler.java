@@ -2,7 +2,6 @@ package bl4ckscor3.mod.snowundertrees;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
@@ -29,7 +28,7 @@ public class LevelTickHandler {
 
 				int randomTickSpeed = level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
 
-				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(chunk -> addSnowUnderTrees(level, chunk, randomTickSpeed)));
+				SnowUnderTrees.runForChunks(level, chunk -> addSnowUnderTrees(level, chunk, randomTickSpeed));
 			}
 		}
 	}
