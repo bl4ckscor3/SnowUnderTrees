@@ -1,10 +1,7 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import java.util.Optional;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
@@ -12,7 +9,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import sereneseasons.api.season.Season;
@@ -28,44 +24,38 @@ public class SereneSeasonsHandler {
 
 		if (season != Season.WINTER) {
 			ServerLevel level = (ServerLevel) event.level;
+			int meltRandomness = switch (subSeason) {
+				case EARLY_SPRING -> 16;
+				case MID_SPRING -> 12;
+				case LATE_SPRING -> 8;
+				default -> 4;
+			};
 
-			level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
-				Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
+			SnowUnderTrees.runForChunks(level, chunk -> {
+				if (SnowUnderTrees.RANDOM.nextInt(meltRandomness) == 0) {
+					ChunkPos chunkPos = chunk.getPos();
+					int chunkX = chunkPos.getMinBlockX();
+					int chunkY = chunkPos.getMinBlockZ();
+					BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
+					Holder<Biome> biomeHolder = level.getBiome(randomPos);
 
-				if (optional.isPresent()) {
-					int meltRandomness = switch (subSeason) {
-						case EARLY_SPRING -> 16;
-						case MID_SPRING -> 12;
-						case LATE_SPRING -> 8;
-						default -> 4;
-					};
+					boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString());
 
-					if (SnowUnderTrees.RANDOM.nextInt(meltRandomness) == 0) {
-						LevelChunk chunk = optional.get();
-						ChunkPos chunkPos = chunk.getPos();
-						int chunkX = chunkPos.getMinBlockX();
-						int chunkY = chunkPos.getMinBlockZ();
-						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Holder<Biome> biomeHolder = level.getBiome(randomPos);
+					if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
+						BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString());
+						if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos)) {
+							BlockState stateNow = level.getBlockState(pos);
+							BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
 
-						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
-							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							if (stateNow != stateAfter) {
+								BlockPos downPos = pos.below();
+								BlockState below = level.getBlockState(downPos);
 
-							if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos)) {
-								BlockState stateNow = level.getBlockState(pos);
-								BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
+								level.setBlockAndUpdate(pos, stateAfter);
 
-								if (stateNow != stateAfter) {
-									BlockPos downPos = pos.below();
-									BlockState below = level.getBlockState(downPos);
-
-									level.setBlockAndUpdate(pos, stateAfter);
-
-									if (below.hasProperty(SnowyDirtBlock.SNOWY))
-										level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
-								}
+								if (below.hasProperty(SnowyDirtBlock.SNOWY))
+									level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
 							}
 						}
 					}

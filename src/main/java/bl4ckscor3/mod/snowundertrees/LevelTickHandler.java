@@ -1,17 +1,13 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import java.util.Optional;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -30,11 +26,8 @@ public class LevelTickHandler {
 				if (SnowUnderTrees.isSereneSeasonsLoaded() && !SereneSeasonsHandler.generateSnowAndIce())
 					return;
 
-				level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> {
-					Optional<LevelChunk> optional = chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
-
-					if (optional.isPresent() && SnowUnderTrees.RANDOM.nextInt(16) == 0) {
-						LevelChunk chunk = optional.get();
+				SnowUnderTrees.runForChunks(level, chunk -> {
+					if (SnowUnderTrees.RANDOM.nextInt(16) == 0) {
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkY = chunkPos.getMinBlockZ();
