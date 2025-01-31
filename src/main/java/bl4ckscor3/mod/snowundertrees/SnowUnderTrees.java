@@ -67,7 +67,7 @@ public class SnowUnderTrees {
 			snowManager = new VanillaManager();
 
 		if (isSereneSeasonsLoaded)
-			temperatureCheck = (level, pos) -> SereneSeasonsHandler.coldEnoughToSnow(level, level.getBiome(pos), pos);
+			temperatureCheck = (level, pos) -> SereneSeasonsHandler.coldEnoughToSnow(level, level.getBiome(pos), pos, level.getSeaLevel());
 		else
 			temperatureCheck = (level, pos) -> !level.getBiome(pos).value().warmEnoughToRain(pos, level.getSeaLevel());
 
@@ -89,7 +89,7 @@ public class SnowUnderTrees {
 	public static boolean canSnow(WorldGenLevel level, BlockPos pos) {
 		Holder<Biome> biome = level.getBiome(pos);
 
-		if (biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Precipitation.SNOW || isSereneSeasonsLoaded && SereneSeasonsHandler.coldEnoughToSnow(level, biome, pos)) {
+		if (biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Precipitation.SNOW || isSereneSeasonsLoaded && SereneSeasonsHandler.coldEnoughToSnow(level, biome, pos, level.getSeaLevel())) {
 			BlockState stateAtPos = level.getBlockState(pos);
 
 			if (!stateAtPos.canBeReplaced())

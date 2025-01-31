@@ -42,7 +42,7 @@ public class SereneSeasonsHandler {
 					if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 						BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-						if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos)) {
+						if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos, level.getSeaLevel())) {
 							BlockState stateNow = level.getBlockState(pos);
 							BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
 
@@ -62,8 +62,8 @@ public class SereneSeasonsHandler {
 		}
 	}
 
-	public static boolean coldEnoughToSnow(WorldGenLevel level, Holder<Biome> biome, BlockPos pos) {
-		return SeasonHooks.coldEnoughToSnowSeasonal(level, biome, pos);
+	public static boolean coldEnoughToSnow(WorldGenLevel level, Holder<Biome> biome, BlockPos pos, int seaLevel) {
+		return SeasonHooks.coldEnoughToSnowSeasonal(level, biome, pos, seaLevel);
 	}
 
 	public static boolean generateSnowAndIce() {
