@@ -43,13 +43,13 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:21.3.3-beta'
+	implementation 'net.neoforged:neoforge:21.3.60'
 
 	//implementation "curse.maven:eternal-winter-273891:4711122"
-	implementation "curse.maven:glitchcore-955399:5660740" //serene seasons dependency
-	implementation "curse.maven:kiwi-303657:5834412" //snow real magic dependency
-	implementation "curse.maven:moonrise-1096335:5848371"
-	implementation "curse.maven:serene-seasons-291874:5661346"
+	implementation "curse.maven:glitchcore-955399:5969783" //serene seasons dependency
+	//implementation "curse.maven:kiwi-303657:5834412" //snow real magic dependency
+	implementation "curse.maven:moonrise-1096335:5955145"
+	implementation "curse.maven:serene-seasons-291874:5861335"
 	//implementation "curse.maven:snow-real-magic-308663:4769110"
 }
 
