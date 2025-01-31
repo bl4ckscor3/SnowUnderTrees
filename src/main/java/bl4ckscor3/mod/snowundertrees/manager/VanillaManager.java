@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class VanillaManager implements SnowManager {
 	@Override
@@ -30,6 +31,9 @@ public class VanillaManager implements SnowManager {
 				}
 			}
 			else {
+				if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF))
+					level.setBlock(pos.above(), Blocks.AIR.defaultBlockState(), 2);
+
 				level.setBlock(pos, Blocks.SNOW.defaultBlockState(), 2);
 				return true;
 			}
