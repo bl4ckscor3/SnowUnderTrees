@@ -10,50 +10,48 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import sereneseasons.api.season.Season;
 import sereneseasons.api.season.Season.SubSeason;
 import sereneseasons.api.season.SeasonHelper;
+import sereneseasons.config.SeasonsConfig;
 import sereneseasons.init.ModConfig;
+import sereneseasons.init.ModTags;
 import sereneseasons.season.SeasonHooks;
 
 public class SereneSeasonsHandler {
 	public static void tryMeltSnowUnderTrees(ServerLevel level) {
 		SubSeason subSeason = SeasonHelper.getSeasonState(level).getSubSeason();
-		Season season = subSeason.getSeason();
+		SeasonsConfig.SeasonProperties seasonProperties = ModConfig.seasons.getSeasonProperties(subSeason);
+		float meltRandomness = seasonProperties.meltChance() / 100.0F;
+		int rolls = seasonProperties.meltRolls();
 
-		if (season != Season.WINTER) {
+		if (rolls > 0 && meltRandomness > 0.0F && generateSnowAndIce() && ModConfig.seasons.isDimensionWhitelisted(level.dimension())) {
 			SnowUnderTrees.runForChunks(level, chunk -> {
-				int meltRandomness = switch (subSeason) {
-					case EARLY_SPRING -> 16;
-					case MID_SPRING -> 12;
-					case LATE_SPRING -> 8;
-					default -> 4;
-				};
+				for (int i = 0; i < rolls; i++) {
+					if (level.random.nextFloat() < meltRandomness) {
+						ChunkPos chunkPos = chunk.getPos();
+						int chunkX = chunkPos.getMinBlockX();
+						int chunkY = chunkPos.getMinBlockZ();
+						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
+						Holder<Biome> biomeHolder = level.getBiome(randomPos);
 
-				if (SnowUnderTrees.RANDOM.nextInt(meltRandomness) == 0) {
-					ChunkPos chunkPos = chunk.getPos();
-					int chunkX = chunkPos.getMinBlockX();
-					int chunkY = chunkPos.getMinBlockZ();
-					BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-					Holder<Biome> biomeHolder = level.getBiome(randomPos);
+						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString()) || biomeHolder.is(ModTags.Biomes.BLACKLISTED_BIOMES);
 
-					boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString());
+						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
+							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-					if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
-						BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos, level.getSeaLevel())) {
+								BlockState stateNow = level.getBlockState(pos);
+								BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
 
-						if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos, level.getSeaLevel())) {
-							BlockState stateNow = level.getBlockState(pos);
-							BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
+								if (stateNow != stateAfter) {
+									BlockPos downPos = pos.below();
+									BlockState below = level.getBlockState(downPos);
 
-							if (stateNow != stateAfter) {
-								BlockPos downPos = pos.below();
-								BlockState below = level.getBlockState(downPos);
+									level.setBlockAndUpdate(pos, stateAfter);
 
-								level.setBlockAndUpdate(pos, stateAfter);
-
-								if (below.hasProperty(SnowyDirtBlock.SNOWY))
-									level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
+									if (below.hasProperty(SnowyDirtBlock.SNOWY))
+										level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
+								}
 							}
 						}
 					}
