@@ -5,7 +5,7 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '7.0.105'
 }
 
-version = '1.4.7'
+version = '1.4.8'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
@@ -45,9 +45,9 @@ repositories {
 dependencies {
 	implementation 'net.neoforged:neoforge:20.6.42-beta'
     //implementation "curse.maven:eternal-winter-273891:4711122"
-    implementation "curse.maven:glitchcore-955399:5317313" //serene seasons dependency
+    implementation "curse.maven:glitchcore-955399:5352264" //serene seasons dependency
     //implementation "curse.maven:kiwi-303657:4688568" //snow real magic dependency
-    implementation "curse.maven:serene-seasons-291874:5317323"
+    implementation "curse.maven:serene-seasons-291874:5420644"
     //implementation "curse.maven:snow-real-magic-308663:4769110"
 }
 
