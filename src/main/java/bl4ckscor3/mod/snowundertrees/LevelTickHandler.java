@@ -30,15 +30,15 @@ public class LevelTickHandler {
 					if (SnowUnderTrees.RANDOM.nextInt(16) == 0) {
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
-						int chunkY = chunkPos.getMinBlockZ();
-						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Biome biome = level.getBiome(randomPos).value();
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
+						int chunkZ = chunkPos.getMinBlockZ();
+						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkZ, 15);
 
-						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
+						if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							Biome biome = level.getBiome(pos).value();
+							boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
 
-							if (SnowUnderTrees.placeSnow(level, pos)) {
+							if (!biomeDisabled && SnowUnderTrees.placeSnow(level, pos)) {
 								BlockPos posBelow = pos.below();
 								BlockState stateBelow = level.getBlockState(posBelow);
 
