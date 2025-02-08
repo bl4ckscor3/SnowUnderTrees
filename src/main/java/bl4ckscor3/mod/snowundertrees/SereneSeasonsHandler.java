@@ -30,16 +30,15 @@ public class SereneSeasonsHandler {
 					if (level.random.nextFloat() < meltRandomness) {
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
-						int chunkY = chunkPos.getMinBlockZ();
-						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkY, 15);
-						Holder<Biome> biomeHolder = level.getBiome(randomPos);
+						int chunkZ = chunkPos.getMinBlockZ();
+						BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkZ, 15);
 
-						boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString()) || biomeHolder.is(ModTags.Biomes.BLACKLISTED_BIOMES);
-
-						if (!biomeDisabled && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
+						if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+							Holder<Biome> biomeHolder = level.getBiome(pos);
+							boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString()) || biomeHolder.is(ModTags.Biomes.BLACKLISTED_BIOMES);
 
-							if (SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos, level.getSeaLevel())) {
+							if (!biomeDisabled && SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos, level.getSeaLevel())) {
 								BlockState stateNow = level.getBlockState(pos);
 								BlockState stateAfter = SnowUnderTrees.getStateAfterMelting(stateNow, level, pos);
 
