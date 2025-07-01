@@ -16,7 +16,12 @@ public class DynamicTreesHandler {
 		state = level.getBlockState(pos);
 
 		while (state.isAir() || state.is(DTBlockTags.BRANCHES) || state.is(DTBlockTags.LEAVES)) {
-			pos.set(pos.getX(), pos.getY() - 1, pos.getZ());
+			int newY = pos.getY() - 1;
+
+			if (newY < level.getMinBuildHeight())
+				return null;
+
+			pos.set(pos.getX(), newY, pos.getZ());
 			state = level.getBlockState(pos);
 		}
 

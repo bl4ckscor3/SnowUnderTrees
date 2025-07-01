@@ -41,6 +41,9 @@ public class SereneSeasonsHandler {
 							if (SnowUnderTrees.isDynamicTreesLoaded()) {
 								pos = DynamicTreesHandler.findGround(level, pos.mutable());
 
+								if (pos == null)
+									return;
+								
 								if (level.getBlockState(pos).isAir()) //need the snow block, not the air above it
 									pos = pos.below();
 							}

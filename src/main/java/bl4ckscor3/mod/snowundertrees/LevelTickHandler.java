@@ -39,6 +39,9 @@ public class LevelTickHandler {
 							if (SnowUnderTrees.isDynamicTreesLoaded())
 								pos = DynamicTreesHandler.findGround(level, pos.mutable());
 
+							if (pos == null)
+								return;
+
 							Biome biome = level.getBiome(pos).value();
 							boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
 
