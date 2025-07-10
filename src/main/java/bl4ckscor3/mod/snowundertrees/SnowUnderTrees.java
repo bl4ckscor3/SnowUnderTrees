@@ -113,7 +113,7 @@ public class SnowUnderTrees {
 		return snowManager.getStateAfterMelting(stateNow, level, pos);
 	}
 
-	private static final boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos) {
+	private static boolean isInBuildRangeAndDarkEnough(WorldGenLevel level, BlockPos pos) {
 		return pos.getY() >= level.getMinBuildHeight() && pos.getY() < level.getMaxBuildHeight() && level.getBrightness(LightLayer.BLOCK, pos) < 10;
 	}
 
@@ -144,5 +144,9 @@ public class SnowUnderTrees {
 
 	public static List<ResourceLocation> biomesToAddTo() {
 		return biomesToAddTo;
+	}
+
+	public static boolean isBiomeDisabled(Holder<Biome> biomeHolder) {
+		return biomeHolder.unwrapKey().map(key -> Configuration.CONFIG.filteredBiomes.get().contains(key.location().toString())).orElse(false);
 	}
 }

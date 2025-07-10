@@ -1,11 +1,9 @@
 package bl4ckscor3.mod.snowundertrees;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -42,10 +40,7 @@ public class LevelTickHandler {
 							if (pos == null)
 								return;
 
-							Biome biome = level.getBiome(pos).value();
-							boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome).toString());
-
-							if (!biomeDisabled && SnowUnderTrees.placeSnow(level, pos)) {
+							if (!SnowUnderTrees.isBiomeDisabled(level.getBiome(pos)) && SnowUnderTrees.placeSnow(level, pos)) {
 								BlockPos posBelow = pos.below();
 								BlockState stateBelow = level.getBlockState(posBelow);
 
