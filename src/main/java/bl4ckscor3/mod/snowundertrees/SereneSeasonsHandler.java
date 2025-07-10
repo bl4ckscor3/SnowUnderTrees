@@ -36,7 +36,7 @@ public class SereneSeasonsHandler {
 						if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 							Holder<Biome> biomeHolder = level.getBiome(pos);
-							boolean biomeDisabled = Configuration.CONFIG.filteredBiomes.get().contains(biomeHolder.unwrapKey().get().location().toString()) || biomeHolder.is(ModTags.Biomes.BLACKLISTED_BIOMES);
+							boolean biomeDisabled = SnowUnderTrees.isBiomeDisabled(biomeHolder) || biomeHolder.is(ModTags.Biomes.BLACKLISTED_BIOMES);
 
 							if (!biomeDisabled && SnowUnderTrees.isSnow(level, pos) && SeasonHooks.warmEnoughToRainSeasonal(level, biomeHolder, pos, level.getSeaLevel())) {
 								BlockState stateNow = level.getBlockState(pos);

@@ -143,6 +143,10 @@ public class SnowUnderTrees {
 		return biomesToAddTo;
 	}
 
+	public static boolean isBiomeDisabled(Holder<Biome> biomeHolder) {
+		return biomeHolder.unwrapKey().map(key -> Configuration.CONFIG.filteredBiomes.get().contains(key.location().toString())).orElse(false);
+	}
+
 	@FunctionalInterface
 	private interface ChunkRunner {
 		void run(ServerLevel level, Consumer<LevelChunk> action);
