@@ -1,0 +1,8 @@
+{
+	"snowundertrees.configuration.enable_biome_feature": "Biom-Feature aktivieren",
+	"snowundertrees.configuration.enable_biome_feature.tooltip": "Wenn ausgeschaltet, erscheint kein Schnee unter Bäumen wenn Chunks das erste Mal generiert werden.",
+	"snowundertrees.configuration.enable_when_snowing": "Bei Schneefall aktivieren",
+	"snowundertrees.configuration.enable_when_snowing.tooltip": "Wenn ausgeschaltet, sammelt sich kein Schnee unter Bäumen, wenn es schneit.",
+	"snowundertrees.configuration.filtered_biomes": "Gefilterte Biome",
+	"snowundertrees.configuration.filtered_biomes.tooltip": "Biome, deren Biom-IDs in dieser Liste sind, werden von \"Snow Under Trees\" ignoriert. Die Biom-ID des Bioms in dem du dich momentan befindest ist mit F3 auf der linken Seite auslesbar. Beispiel: Die Biom-ID der Ebene ist minecraft:plains"
+}

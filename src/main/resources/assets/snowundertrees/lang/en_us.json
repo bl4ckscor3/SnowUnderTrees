@@ -1,0 +1,8 @@
+{
+	"snowundertrees.configuration.enable_biome_feature": "Enable biome feature",
+	"snowundertrees.configuration.enable_biome_feature.tooltip": "Disable this so that there is no snow under trees when first generating chunks.",
+	"snowundertrees.configuration.enable_when_snowing": "Enable when snowing",
+	"snowundertrees.configuration.enable_when_snowing.tooltip": "Disable this so no snow accumulates under trees while it's snowing.",
+	"snowundertrees.configuration.filtered_biomes": "Filtered biomes",
+	"snowundertrees.configuration.filtered_biomes.tooltip": "Add biome IDs here to exempt biomes from being affected by the mod. You can find the biome ID of the biome you're currently in on the F3 screen. For example, the biome ID of the plains biome looks like this: minecraft:plains"
+}
