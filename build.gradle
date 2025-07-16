@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.165'
+	id 'net.neoforged.moddev' version '2.0.82'
 }
 
 version = '1.4.12'
@@ -15,22 +15,31 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+neoForge {
+	version = "21.1.192"
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.console.level', 'debug'
-        modSource project.sourceSets.main
-    }
+	runs {
+		configureEach {
+			logLevel = org.slf4j.event.Level.DEBUG
+			gameDirectory = project.file("run/" + name)
+			ideName = "SnowUnderTrees " + ideName.get()
+		}
 
-    client {
-        workingDirectory project.file('runs/client')
-    }
+		client {
+			client()
+		}
 
-    server {
-        workingDirectory project.file('runs/server')
-        argument '-nogui'
-    }
+		server {
+			server()
+			programArgument('-nogui')
+		}
+	}
+
+	mods {
+		snowundertrees {
+			sourceSet(sourceSets.main)
+		}
+	}
 }
 
 repositories {
@@ -43,8 +52,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:21.1.143'
-
 	implementation "curse.maven:dynamictrees-252818:6360173"
 	//implementation "curse.maven:eternal-winter-273891:4711122"
 	implementation "curse.maven:glitchcore-955399:5660740" //serene seasons dependency
@@ -68,4 +75,11 @@ tasks.named('jar', Jar).configure {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 	options.release = 21
+}
+
+idea {
+	module {
+		downloadSources = true
+		downloadJavadoc = true
+	}
 }
