@@ -53,10 +53,10 @@ repositories {
 
 dependencies {
 	//implementation "curse.maven:eternal-winter-273891:4711122"
-	implementation "curse.maven:glitchcore-955399:6054289" //serene seasons dependency
+	implementation "curse.maven:glitchcore-955399:6742885" //serene seasons dependency
 	//implementation "curse.maven:kiwi-303657:5834412" //snow real magic dependency
-	implementation "curse.maven:moonrise-1096335:6131827"
-	implementation "curse.maven:serene-seasons-291874:5987111"
+	implementation "curse.maven:moonrise-1096335:6712276"
+	implementation "curse.maven:serene-seasons-291874:6747299"
 	//implementation "curse.maven:snow-real-magic-308663:4769110"
 }
 
