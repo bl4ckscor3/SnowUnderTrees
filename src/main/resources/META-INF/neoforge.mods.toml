@@ -1,4 +1,4 @@
-license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.21.5/LICENSE"
+license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.21.10/LICENSE"
 
 [[mods]]
 	modId="snowundertrees"
@@ -12,13 +12,13 @@ license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.21.5/LICENSE"
 [[dependencies.snowundertrees]]
     modId="neoforge"
     type="required"
-    versionRange="[21.5.11-beta,)"
+    versionRange="[21.10,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.snowundertrees]]
     modId="minecraft"
     type="required"
-    versionRange="[1.21.5,1.22)"
+    versionRange="[1.21.10,1.22)"
     ordering="NONE"
     side="BOTH"

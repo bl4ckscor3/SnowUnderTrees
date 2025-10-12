@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
+import com.google.common.collect.Iterables;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -74,7 +75,7 @@ public class SnowUnderTrees {
 		if (ModList.get().isLoaded("moonrise"))
 			chunkRunner = MoonriseCompat::chunkRunner;
 		else
-			chunkRunner = (level, action) -> level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(action::accept));
+			chunkRunner = (level, action) -> Iterables.unmodifiableIterable(level.getChunkSource().chunkMap.visibleChunkMap.values()).forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(action::accept));
 	}
 
 	public static void addSnowUnderTrees(ResourceLocation biomeName) {

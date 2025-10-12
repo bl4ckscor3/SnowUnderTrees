@@ -5,7 +5,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -18,7 +17,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 public class LevelTickHandler {
 	@SubscribeEvent
 	public static void onWorldTick(LevelTickEvent.Pre event) {
-		if (!event.getLevel().isClientSide) {
+		if (!event.getLevel().isClientSide()) {
 			ServerLevel level = (ServerLevel) event.getLevel();
 
 			if (level.isRaining() && Configuration.CONFIG.enableWhenSnowing.get()) {
@@ -58,7 +57,7 @@ public class LevelTickHandler {
 
 	@SubscribeEvent
 	public static void onWorldTick(LevelTickEvent.Post event) {
-		if (!event.getLevel().isClientSide && SnowUnderTrees.isSereneSeasonsLoaded())
+		if (!event.getLevel().isClientSide() && SnowUnderTrees.isSereneSeasonsLoaded())
 			SereneSeasonsHandler.tryMeltSnowUnderTrees((ServerLevel) event.getLevel());
 	}
 }

@@ -2,21 +2,21 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
-	id 'net.neoforged.moddev' version '2.0.99'
+	id 'net.neoforged.moddev' version '2.0.115'
 }
 
 version = '1.5'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
-	archivesName = 'snowundertrees-1.21.7'
+	archivesName = 'snowundertrees-1.21.10'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 neoForge {
-	version = "21.7.23-beta"
+	version = "21.10.11-beta"
 
 	runs {
 		configureEach {
@@ -52,12 +52,12 @@ repositories {
 }
 
 dependencies {
-	//implementation "curse.maven:eternal-winter-273891:4711122"
-	implementation "curse.maven:glitchcore-955399:6742885" //serene seasons dependency
-	//implementation "curse.maven:kiwi-303657:5834412" //snow real magic dependency
-	implementation "curse.maven:moonrise-1096335:6712276"
-	implementation "curse.maven:serene-seasons-291874:6747299"
-	//implementation "curse.maven:snow-real-magic-308663:4769110"
+	compileOnly "curse.maven:eternal-winter-273891:4711122"
+    implementation "curse.maven:glitchcore-955399:7098539" //serene seasons dependency
+	compileOnly "curse.maven:kiwi-303657:5834412" //snow real magic dependency
+    implementation "curse.maven:moonrise-1096335:7078403"
+    implementation "curse.maven:serene-seasons-291874:7064165"
+	compileOnly "curse.maven:snow-real-magic-308663:4769110"
 }
 
 tasks.named('jar', Jar).configure {
