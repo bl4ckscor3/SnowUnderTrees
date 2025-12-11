@@ -3,7 +3,7 @@ package bl4ckscor3.mod.snowundertrees;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -41,7 +41,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 		//@formatter:off
 		return Configuration.CONFIG.filteredBiomes.get()
 				.stream()
-				.map(ResourceLocation::parse)
+				.map(Identifier::parse)
 				.anyMatch(biome::is);
 		//@formatter:on
 	}

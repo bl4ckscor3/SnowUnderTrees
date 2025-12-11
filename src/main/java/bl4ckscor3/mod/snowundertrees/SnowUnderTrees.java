@@ -16,7 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -49,7 +49,7 @@ public class SnowUnderTrees {
 	public static final DeferredHolder<Feature<?>, SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = FEATURES.register("snow_under_trees", () -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
 	public static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<SnowUnderTreesBiomeModifier>> SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC = BIOME_MODIFIER_SERIALIZERS.register("snow_under_trees", () -> RecordCodecBuilder.mapCodec(builder -> builder.group(PlacedFeature.CODEC.fieldOf("feature").forGetter(SnowUnderTreesBiomeModifier::snowUnderTreesFeature)).apply(builder, SnowUnderTreesBiomeModifier::new)));
 	public static final RandomSource RANDOM = RandomSource.create();
-	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
+	private static List<Identifier> biomesToAddTo = new ArrayList<>();
 	private static SnowManager snowManager;
 	private static ChunkRunner chunkRunner;
 	private static boolean isSereneSeasonsLoaded, isEternalWinterLoaded;
@@ -78,7 +78,7 @@ public class SnowUnderTrees {
 			chunkRunner = (level, action) -> Iterables.unmodifiableIterable(level.getChunkSource().chunkMap.visibleChunkMap.values()).forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(action::accept));
 	}
 
-	public static void addSnowUnderTrees(ResourceLocation biomeName) {
+	public static void addSnowUnderTrees(Identifier biomeName) {
 		if (!biomesToAddTo.contains(biomeName))
 			biomesToAddTo.add(biomeName);
 	}
@@ -140,12 +140,12 @@ public class SnowUnderTrees {
 		});
 	}
 
-	public static List<ResourceLocation> biomesToAddTo() {
+	public static List<Identifier> biomesToAddTo() {
 		return biomesToAddTo;
 	}
 
 	public static boolean isBiomeDisabled(Holder<Biome> biomeHolder) {
-		return biomeHolder.unwrapKey().map(key -> Configuration.CONFIG.filteredBiomes.get().contains(key.location().toString())).orElse(false);
+		return biomeHolder.unwrapKey().map(key -> Configuration.CONFIG.filteredBiomes.get().contains(key.identifier().toString())).orElse(false);
 	}
 
 	@FunctionalInterface

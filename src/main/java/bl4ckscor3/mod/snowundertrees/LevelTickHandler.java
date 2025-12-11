@@ -4,10 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,7 +24,7 @@ public class LevelTickHandler {
 				if (SnowUnderTrees.isSereneSeasonsLoaded() && !SereneSeasonsHandler.generateSnowAndIce())
 					return;
 
-				int randomTickSpeed = level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
+				int randomTickSpeed = level.getGameRules().get(GameRules.RANDOM_TICK_SPEED);
 
 				SnowUnderTrees.runForChunks(level, chunk -> addSnowUnderTrees(level, chunk, randomTickSpeed));
 			}
