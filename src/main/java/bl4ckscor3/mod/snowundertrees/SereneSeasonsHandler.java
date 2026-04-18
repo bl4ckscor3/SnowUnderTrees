@@ -7,8 +7,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.Heightmap;
 import sereneseasons.api.season.Season.SubSeason;
 import sereneseasons.api.season.SeasonHelper;
@@ -27,7 +27,7 @@ public class SereneSeasonsHandler {
 		if (rolls > 0 && meltRandomness > 0.0F && generateSnowAndIce() && ModConfig.seasons.isDimensionWhitelisted(level.dimension())) {
 			SnowUnderTrees.runForChunks(level, chunk -> {
 				for (int i = 0; i < rolls; i++) {
-					if (level.random.nextFloat() < meltRandomness) {
+					if (level.getRandom().nextFloat() < meltRandomness) {
 						ChunkPos chunkPos = chunk.getPos();
 						int chunkX = chunkPos.getMinBlockX();
 						int chunkZ = chunkPos.getMinBlockZ();
@@ -48,8 +48,8 @@ public class SereneSeasonsHandler {
 
 									level.setBlockAndUpdate(pos, stateAfter);
 
-									if (below.hasProperty(SnowyDirtBlock.SNOWY))
-										level.setBlock(downPos, below.setValue(SnowyDirtBlock.SNOWY, false), 2);
+									if (below.hasProperty(BlockStateProperties.SNOWY))
+										level.setBlock(downPos, below.setValue(BlockStateProperties.SNOWY, false), 2);
 								}
 							}
 						}

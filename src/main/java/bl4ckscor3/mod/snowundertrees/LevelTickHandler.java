@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -47,8 +47,8 @@ public class LevelTickHandler {
 						BlockPos posBelow = pos.below();
 						BlockState stateBelow = level.getBlockState(posBelow);
 
-						if (stateBelow.hasProperty(SnowyDirtBlock.SNOWY))
-							level.setBlock(posBelow, stateBelow.setValue(SnowyDirtBlock.SNOWY, true), 2);
+						if (stateBelow.hasProperty(BlockStateProperties.SNOWY))
+							level.setBlock(posBelow, stateBelow.setValue(BlockStateProperties.SNOWY, true), 2);
 					}
 				}
 			}
