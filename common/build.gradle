@@ -1,0 +1,20 @@
+plugins {
+    id 'net.neoforged.moddev' version "${mdg_version}"
+}
+
+neoForge {
+    neoFormVersion = neo_form_version
+    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+}
+
+dependencies {
+    api "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:${fcap_version}"
+    compileOnly "net.fabricmc:sponge-mixin:${mixin_version}"
+    compileOnly "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
+    annotationProcessor "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
+	compileOnly "curse.maven:glitchcore-955399:${glitchcore_neoforge_version}" //serene seasons dependency
+    compileOnly "curse.maven:kiwi-549404:${kiwi_fabric_version}" //snow real magic dependency
+    compileOnly "curse.maven:moonrise-1096335:${moonrise_neoforge_version}"
+    compileOnly "curse.maven:serene-seasons-291874:${serene_seasons_neoforge_version}"
+    compileOnly "curse.maven:snow-real-magic-560441:${snow_real_magic_fabric_version}"
+}
