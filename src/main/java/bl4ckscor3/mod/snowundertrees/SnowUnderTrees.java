@@ -52,7 +52,7 @@ public class SnowUnderTrees {
 	private static List<Identifier> biomesToAddTo = new ArrayList<>();
 	private static SnowManager snowManager;
 	private static ChunkRunner chunkRunner;
-	private static boolean isSereneSeasonsLoaded, isEternalWinterLoaded;
+	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
 	public SnowUnderTrees(IEventBus modEventBus, ModContainer modContainer) {
@@ -60,7 +60,6 @@ public class SnowUnderTrees {
 		FEATURES.register(modEventBus);
 		BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
-		isEternalWinterLoaded = ModList.get().isLoaded("eternalwinter");
 
 		if (ModList.get().isLoaded("snowrealmagic"))
 			snowManager = new SnowRealMagicManager();
@@ -121,10 +120,6 @@ public class SnowUnderTrees {
 
 	public static boolean isSereneSeasonsLoaded() {
 		return isSereneSeasonsLoaded;
-	}
-
-	public static boolean isEternalWinterLoaded() {
-		return isEternalWinterLoaded;
 	}
 
 	public static void runForChunks(ServerLevel level, Consumer<LevelChunk> action) {

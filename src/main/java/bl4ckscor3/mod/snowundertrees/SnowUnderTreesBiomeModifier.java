@@ -15,9 +15,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 	@Override
 	public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
 		if (phase == Phase.ADD && Configuration.CONFIG.enableBiomeFeature.get()) {
-			boolean isEternalWinterActive = SnowUnderTrees.isEternalWinterLoaded() && EternalWinterHandler.isActive(biome);
-
-			if (isEternalWinterActive || shouldAddToBiome(biome, builder.getClimateSettings()))
+			if (shouldAddToBiome(biome, builder.getClimateSettings()))
 				builder.getGenerationSettings().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION.ordinal(), snowUnderTreesFeature);
 		}
 	}

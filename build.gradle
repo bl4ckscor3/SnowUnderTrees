@@ -52,7 +52,6 @@ repositories {
 }
 
 dependencies {
-	compileOnly "curse.maven:eternal-winter-273891:4711122"
 	compileOnly "curse.maven:glitchcore-955399:7098539" //serene seasons dependency
 	compileOnly "curse.maven:kiwi-303657:5834412" //snow real magic dependency
 	compileOnly "curse.maven:moonrise-1096335:7078403"
