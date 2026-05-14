@@ -126,12 +126,8 @@ public class SnowUnderTrees {
 		ServerChunkCache cache = level.getChunkSource();
 
 		chunkRunner.run(level, chunk -> {
-			ChunkPos chunkPos = chunk.getPos();
-
-			if ((level.canSpawnEntitiesInChunk(chunkPos) && cache.chunkMap.anyPlayerCloseEnoughForSpawning(chunkPos)) || cache.chunkMap.getDistanceManager().inBlockTickingRange(chunkPos.pack())) {
-				if (level.shouldTickBlocksAt(chunkPos.pack()))
-					action.accept(chunk);
-			}
+			if (level.shouldTickBlocksAt(chunk.getPos().pack()))
+				action.accept(chunk);
 		});
 	}
 
