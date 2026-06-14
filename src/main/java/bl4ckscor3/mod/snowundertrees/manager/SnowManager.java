@@ -7,6 +7,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface SnowManager {
 	public boolean placeSnow(WorldGenLevel level, BlockPos pos);
 
+	public boolean canBeReplaced(BlockState state);
+
 	public boolean isSnow(WorldGenLevel level, BlockPos pos);
 
 	public BlockState getStateAfterMelting(BlockState stateNow, WorldGenLevel level, BlockPos pos);

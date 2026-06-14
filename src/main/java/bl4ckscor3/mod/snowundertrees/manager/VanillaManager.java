@@ -43,6 +43,11 @@ public class VanillaManager implements SnowManager {
 	}
 
 	@Override
+	public boolean canBeReplaced(BlockState state) {
+		return state.canBeReplaced();
+	}
+
+	@Override
 	public boolean isSnow(WorldGenLevel level, BlockPos pos) {
 		return level.getBlockState(pos).getBlock() == Blocks.SNOW;
 	}
