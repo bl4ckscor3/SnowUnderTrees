@@ -16,7 +16,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 neoForge {
-	version = "21.11.5-beta"
+	version = "21.11.42"
 
 	runs {
 		configureEach {
@@ -53,10 +53,10 @@ repositories {
 
 dependencies {
 	compileOnly "curse.maven:eternal-winter-273891:4711122"
-    implementation "curse.maven:glitchcore-955399:7098539" //serene seasons dependency
+    implementation "curse.maven:glitchcore-955399:7720796" //serene seasons dependency
 	compileOnly "curse.maven:kiwi-303657:5834412" //snow real magic dependency
-    implementation "curse.maven:moonrise-1096335:7078403"
-    implementation "curse.maven:serene-seasons-291874:7064165"
+    implementation "curse.maven:moonrise-1096335:7630245"
+    implementation "curse.maven:serene-seasons-291874:7774493"
 	compileOnly "curse.maven:snow-real-magic-308663:4769110"
 }
 
