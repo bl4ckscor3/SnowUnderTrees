@@ -19,6 +19,11 @@ public interface SnowRealMagicManager extends SnowManager {
 	}
 
 	@Override
+	default boolean canBeReplaced(BlockState state) {
+		return state.canBeReplaced() || Hooks.canContainState(state);
+	}
+
+	@Override
 	default boolean isSnow(WorldGenLevel level, BlockPos pos) {
 		Block block = level.getBlockState(pos).getBlock();
 

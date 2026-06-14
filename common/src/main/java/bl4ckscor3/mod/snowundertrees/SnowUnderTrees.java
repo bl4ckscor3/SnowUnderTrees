@@ -79,7 +79,7 @@ public class SnowUnderTrees {
 		if (biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Biome.Precipitation.SNOW || isSereneSeasonsLoaded && SereneSeasonsHandler.coldEnoughToSnow(level, biome, pos, level.getSeaLevel())) {
 			BlockState stateAtPos = level.getBlockState(pos);
 
-			if (!stateAtPos.canBeReplaced())
+			if (!snowManager.canBeReplaced(stateAtPos))
 				return false;
 
 			if (temperatureCheck.apply(level, pos) && isInBuildRangeAndDarkEnough(level, pos)) {
