@@ -5,7 +5,7 @@ plugins {
 	id 'net.neoforged.moddev' version '2.0.99'
 }
 
-version = '1.5'
+version = '1.5.1'
 group = 'bl4ckscor3.mod.snowundertrees'
 
 base {
@@ -52,13 +52,13 @@ repositories {
 }
 
 dependencies {
-	implementation "curse.maven:dynamictrees-252818:6360173"
+	implementation "curse.maven:dynamictrees-252818:8227322"
 	//implementation "curse.maven:eternal-winter-273891:4711122"
-	implementation "curse.maven:glitchcore-955399:5660740" //serene seasons dependency
-	implementation "curse.maven:kiwi-303657:6367362" //snow real magic dependency
-	implementation "curse.maven:moonrise-1096335:5848371"
+	implementation "curse.maven:glitchcore-955399:8109792" //serene seasons dependency
+	implementation "curse.maven:kiwi-303657:8110292" //snow real magic dependency
+	implementation "curse.maven:moonrise-1096335:7089177"
 	implementation "curse.maven:serene-seasons-291874:6182596"
-	implementation "curse.maven:snow-real-magic-308663:6374202"
+	implementation "curse.maven:snow-real-magic-308663:7579809"
 }
 
 tasks.named('jar', Jar).configure {
