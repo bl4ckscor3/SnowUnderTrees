@@ -32,10 +32,10 @@ neoForge {
 
 dependencies {
     compileOnly project(":common")
-	compileOnly "curse.maven:glitchcore-955399:${glitchcore_neoforge_version}" //serene seasons dependency
+    implementation "curse.maven:glitchcore-955399:${glitchcore_neoforge_version}" //serene seasons dependency
 	compileOnly "curse.maven:kiwi-303657:${kiwi_neoforge_version}" //snow real magic dependency
-    compileOnly "curse.maven:moonrise-1096335:${moonrise_neoforge_version}"
-	compileOnly "curse.maven:serene-seasons-291874:${serene_seasons_neoforge_version}"
+    implementation "curse.maven:moonrise-1096335:${moonrise_neoforge_version}"
+    implementation "curse.maven:serene-seasons-291874:${serene_seasons_neoforge_version}"
 	compileOnly "curse.maven:snow-real-magic-308663:${snow_real_magic_neoforge_version}"
 }
 

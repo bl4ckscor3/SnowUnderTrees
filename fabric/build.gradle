@@ -18,10 +18,10 @@ dependencies {
     implementation project(":common")
     implementation "com.terraformersmc:modmenu:${modmenu_version}"
     implementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${fcap_version}"
-	compileOnly "curse.maven:glitchcore-955399:${glitchcore_fabric_version}" //serene seasons dependency
+    implementation "curse.maven:glitchcore-955399:${glitchcore_fabric_version}" //serene seasons dependency
     implementation "curse.maven:kiwi-549404:${kiwi_fabric_version}" //snow real magic dependency
 	implementation "curse.maven:moonrise-1096335:${moonrise_fabric_version}"
-	compileOnly "curse.maven:serene-seasons-291874:${serene_seasons_fabric_version}"
+    implementation "curse.maven:serene-seasons-291874:${serene_seasons_fabric_version}"
     implementation "curse.maven:snow-real-magic-560441:${snow_real_magic_fabric_version}"
 }
 
