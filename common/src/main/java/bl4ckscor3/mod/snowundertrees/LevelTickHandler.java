@@ -34,6 +34,12 @@ public class LevelTickHandler {
 				if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 					BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
+					if (SnowUnderTrees.isDynamicTreesLoaded())
+						pos = DynamicTreesHandler.findGround(level, pos.mutable());
+
+					if (pos == null)
+						return;
+
 					if (!SnowUnderTrees.isBiomeDisabled(level.getBiome(pos)) && SnowUnderTrees.placeSnow(level, pos)) {
 						BlockPos posBelow = pos.below();
 						BlockState stateBelow = level.getBlockState(posBelow);

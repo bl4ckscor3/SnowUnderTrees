@@ -18,6 +18,7 @@ dependencies {
     implementation project(":common")
     implementation "com.terraformersmc:modmenu:${modmenu_version}"
     implementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${fcap_version}"
+    compileOnly "curse.maven:dynamictrees-252818:${dynamic_trees_fabric_version}"
     implementation "curse.maven:glitchcore-955399:${glitchcore_fabric_version}" //serene seasons dependency
     implementation "curse.maven:kiwi-549404:${kiwi_fabric_version}" //snow real magic dependency
 	implementation "curse.maven:moonrise-1096335:${moonrise_fabric_version}"

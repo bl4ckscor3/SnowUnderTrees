@@ -12,6 +12,7 @@ dependencies {
     compileOnly "net.fabricmc:sponge-mixin:${mixin_version}"
     compileOnly "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
     annotationProcessor "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
+    compileOnly "curse.maven:dynamictrees-252818:${dynamic_trees_neoforge_version}"
 	compileOnly "curse.maven:glitchcore-955399:${glitchcore_neoforge_version}" //serene seasons dependency
     compileOnly "curse.maven:kiwi-549404:${kiwi_fabric_version}" //snow real magic dependency
     compileOnly "curse.maven:moonrise-1096335:${moonrise_neoforge_version}"

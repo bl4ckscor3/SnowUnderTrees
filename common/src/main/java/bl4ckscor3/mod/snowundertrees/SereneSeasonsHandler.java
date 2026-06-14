@@ -35,6 +35,17 @@ public class SereneSeasonsHandler {
 
 						if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
 							BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
+
+							if (SnowUnderTrees.isDynamicTreesLoaded()) {
+								pos = DynamicTreesHandler.findGround(level, pos.mutable());
+
+								if (pos == null)
+									return;
+
+								if (level.getBlockState(pos).isAir()) //need the snow block, not the air above it
+									pos = pos.below();
+							}
+
 							Holder<Biome> biomeHolder = level.getBiome(pos);
 							boolean biomeDisabled = SnowUnderTrees.isBiomeDisabled(biomeHolder) || biomeHolder.is(ModTags.Biomes.BLACKLISTED_BIOMES);
 

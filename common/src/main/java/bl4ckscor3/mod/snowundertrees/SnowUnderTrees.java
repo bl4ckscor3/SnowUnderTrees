@@ -34,7 +34,7 @@ public class SnowUnderTrees {
 	private static List<Identifier> biomesToAddTo = new ArrayList<>();
 	private static SnowManager snowManager;
 	private static ChunkRunner chunkRunner;
-	private static boolean isSereneSeasonsLoaded;
+	private static boolean isSereneSeasonsLoaded, isDynamicTreesLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
 	public synchronized static void initialize(Platform platform) {
@@ -46,6 +46,7 @@ public class SnowUnderTrees {
 		platform.register(Registries.FEATURE, SNOW_UNDER_TREES_FEATURE, "snow_under_trees");
 
 		isSereneSeasonsLoaded = platform.isModLoaded("sereneseasons");
+		isDynamicTreesLoaded = platform.isModLoaded("dynamictrees");
 
 		if (platform.isModLoaded("snowrealmagic"))
 			snowManager = platform.getSnowRealMagicManager();
@@ -107,6 +108,10 @@ public class SnowUnderTrees {
 
 	public static boolean isSereneSeasonsLoaded() {
 		return isSereneSeasonsLoaded;
+	}
+
+	public static boolean isDynamicTreesLoaded() {
+		return isDynamicTreesLoaded;
 	}
 
 	public static void runForChunks(ServerLevel level, Consumer<LevelChunk> action) {
