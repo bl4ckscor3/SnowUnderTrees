@@ -45,7 +45,7 @@ public class SnowUnderTrees {
 		SnowUnderTrees.platform = platform;
 		platform.register(Registries.FEATURE, SNOW_UNDER_TREES_FEATURE, "snow_under_trees");
 
-		isSereneSeasonsLoaded = false;//platform.isModLoaded("sereneseasons");
+		isSereneSeasonsLoaded = platform.isModLoaded("sereneseasons");
 
 		if (platform.isModLoaded("snowrealmagic"))
 			snowManager = platform.getSnowRealMagicManager();
