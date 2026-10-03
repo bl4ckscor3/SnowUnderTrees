@@ -33,7 +33,7 @@ public class NeoEntrypoint implements Platform {
 	public NeoEntrypoint(ModContainer modContainer, IEventBus modBus) {
 		this.modBus = modBus;
 		SnowUnderTrees.initialize(this);
-		modContainer.registerConfig(ModConfig.Type.COMMON, Configuration.CONFIG_SPEC);
+		modContainer.registerConfig(ModConfig.Type.LOCAL, Configuration.CONFIG_SPEC);
 		register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, SNOW_UNDER_TREES_BIOME_MODIFIER_CODEC, "snow_under_trees");
 	}
 
