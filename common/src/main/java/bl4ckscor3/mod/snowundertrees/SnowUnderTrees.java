@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.Iterables;
 
 import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
@@ -24,11 +22,9 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class SnowUnderTrees {
 	public static final String MODID = "snowundertrees";
-	public static final Supplier<SnowUnderTreesFeature> SNOW_UNDER_TREES_FEATURE = Suppliers.memoize(() -> new SnowUnderTreesFeature(NoneFeatureConfiguration.CODEC));
 	private static Platform platform;
 	public static final RandomSource RANDOM = RandomSource.create();
 	private static List<Identifier> biomesToAddTo = new ArrayList<>();
@@ -43,7 +39,7 @@ public class SnowUnderTrees {
 		}
 
 		SnowUnderTrees.platform = platform;
-		platform.register(Registries.FEATURE, SNOW_UNDER_TREES_FEATURE, "snow_under_trees");
+		platform.register(Registries.FEATURE_TYPE, () -> SnowUnderTreesFeature.CODEC, "snow_under_trees");
 
 		isSereneSeasonsLoaded = platform.isModLoaded("sereneseasons");
 		isDynamicTreesLoaded = platform.isModLoaded("dynamictrees");

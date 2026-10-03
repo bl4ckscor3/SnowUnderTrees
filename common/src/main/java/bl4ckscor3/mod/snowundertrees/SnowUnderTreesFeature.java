@@ -1,27 +1,28 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class SnowUnderTreesFeature extends Feature<NoneFeatureConfiguration> {
-	public SnowUnderTreesFeature(Codec<NoneFeatureConfiguration> codec) {
-		super(codec);
+public class SnowUnderTreesFeature implements Feature {
+	public static final MapCodec<SnowUnderTreesFeature> CODEC = MapCodec.unit(SnowUnderTreesFeature::new);
+
+	@Override
+	public MapCodec<SnowUnderTreesFeature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctx) {
-		BlockPos pos = ctx.origin();
-		WorldGenLevel level = ctx.level();
+	public boolean place(final WorldGenLevel level, final ChunkGenerator chunkGenerator, final RandomSource random, final BlockPos pos) {
 		BlockPos.MutableBlockPos mPos = new BlockPos.MutableBlockPos();
 
 		for (int xi = 0; xi < 16; xi++) {
