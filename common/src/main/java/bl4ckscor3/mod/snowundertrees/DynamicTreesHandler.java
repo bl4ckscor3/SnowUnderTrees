@@ -11,7 +11,7 @@ public class DynamicTreesHandler {
 	public static BlockPos findGround(WorldGenLevel level, BlockPos.MutableBlockPos pos) {
 		BlockState state;
 
-		pos.set(pos.getX(), pos.getY() - 1, pos.getZ());
+		pos.setY(pos.getY() - 1);
 		state = level.getBlockState(pos);
 
 		while (state.isAir() || state.is(DTBlockTags.BRANCHES) || state.is(DTBlockTags.LEAVES)) {
@@ -20,13 +20,13 @@ public class DynamicTreesHandler {
 			if (newY < level.getMinY())
 				return null;
 
-			pos.set(pos.getX(), newY, pos.getZ());
+			pos.setY(newY);
 			state = level.getBlockState(pos);
 		}
 
 		//make sure snow real magic still works by not moving the block position up when a flower/grass/etc. is at the position
 		if (!(state.is(DTBlockTags.FOLIAGE) || state.getBlock() == Blocks.SWEET_BERRY_BUSH))
-			pos.set(pos.getX(), pos.getY() + 1, pos.getZ()); //the block above the ground is needed, not the ground block itself
+			pos.setY(pos.getY() + 1); //the block above the ground is needed, not the ground block itself
 
 		return pos;
 	}
