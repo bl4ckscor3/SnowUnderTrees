@@ -11,6 +11,9 @@ license="MIT https://github.com/bl4ckscor3/SnowUnderTrees/blob/1.21/LICENSE"
 	displayURL="https://www.curseforge.com/minecraft/mc-mods/snow-under-trees"
 	authors="bl4ckscor3"
 
+[[mixins]]
+    config="snowundertrees.mixins.json"
+
 [[dependencies.snowundertrees]]
     modId="neoforge"
     type="required"

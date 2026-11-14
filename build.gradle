@@ -53,7 +53,7 @@ repositories {
 
 dependencies {
 	implementation "curse.maven:dynamictrees-252818:8227322"
-	//implementation "curse.maven:eternal-winter-273891:4711122"
+	implementation "curse.maven:snowy-423429:6924653"
 	implementation "curse.maven:glitchcore-955399:8109792" //serene seasons dependency
 	implementation "curse.maven:kiwi-303657:8110292" //snow real magic dependency
 	implementation "curse.maven:moonrise-1096335:7089177"
