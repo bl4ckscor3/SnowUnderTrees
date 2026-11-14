@@ -8,6 +8,7 @@ import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -28,7 +29,7 @@ public class FabricEntrypoint implements ModInitializer, Platform {
 		ServerTickEvents.END_LEVEL_TICK.register(LevelTickHandler::onLevelTickPost);
 		BiomeModifications.create(SnowUnderTrees.id("snow_under_trees"))
 			.add(ModificationPhase.ADDITIONS,
-				ctx -> SnowUnderTrees.shouldAddToBiome(ctx.getBiomeHolder(), ctx.getBiome().hasPrecipitation(), ctx.getBiome().getBaseTemperature()),
+				ctx -> SnowUnderTrees.shouldAddToBiome(canSnowyModify(ctx), ctx.getBiomeHolder(), ctx.getBiome().hasPrecipitation(), ctx.getBiome().getBaseTemperature()),
 				ctx -> ctx.getGenerationSettings().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, ResourceKey.create(Registries.PLACED_FEATURE, SnowUnderTrees.id("snow_under_trees")))
 			);
 	}
@@ -53,5 +54,9 @@ public class FabricEntrypoint implements ModInitializer, Platform {
 	@Override
 	public SnowManager getSnowRealMagicManager() {
 		return new FabricSnowRealMagicManager();
+	}
+
+	private boolean canSnowyModify(BiomeSelectionContext ctx) {
+		return SnowUnderTrees.isSnowyLoaded() && SnowyHandler.isActive(ctx);
 	}
 }

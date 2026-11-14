@@ -18,4 +18,5 @@ dependencies {
     compileOnly "curse.maven:moonrise-1096335:${moonrise_neoforge_version}"
     compileOnly "curse.maven:serene-seasons-291874:${serene_seasons_neoforge_version}"
     compileOnly "curse.maven:snow-real-magic-560441:${snow_real_magic_fabric_version}"
+    compileOnly "curse.maven:snowy-423429:${snowy_neoforge_version}"
 }

@@ -23,6 +23,9 @@
         ]
     },
     "accessWidener": "${mod_id}.classtweaker",
+    "mixins": [
+        "${mod_id}.fabric.mixins.json"
+    ],
     "depends": {
         "fabric-api": "*",
         "minecraft": ">=${minecraft_min_version}",

@@ -1,0 +1,8 @@
+{
+	"package": "bl4ckscor3.mod.snowundertrees.mixin",
+	"compatibilityLevel": "JAVA_${java_version}",
+	"mixins": [
+		"SnowyNeoForgeAccessor"
+	],
+	"minVersion": "0.8"
+}

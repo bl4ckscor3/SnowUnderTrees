@@ -24,6 +24,7 @@ dependencies {
 	implementation "curse.maven:moonrise-1096335:${moonrise_fabric_version}"
     implementation "curse.maven:serene-seasons-291874:${serene_seasons_fabric_version}"
     implementation "curse.maven:snow-real-magic-560441:${snow_real_magic_fabric_version}"
+    implementation "curse.maven:snowy-423429:${snowy_fabric_version}"
 }
 
 loom {

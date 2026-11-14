@@ -34,7 +34,7 @@ public class SnowUnderTrees {
 	private static List<Identifier> biomesToAddTo = new ArrayList<>();
 	private static SnowManager snowManager;
 	private static ChunkRunner chunkRunner;
-	private static boolean isSereneSeasonsLoaded, isDynamicTreesLoaded;
+	private static boolean isSereneSeasonsLoaded, isSnowyLoaded, isDynamicTreesLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
 	public synchronized static void initialize(Platform platform) {
@@ -46,6 +46,7 @@ public class SnowUnderTrees {
 		platform.register(Registries.FEATURE, SNOW_UNDER_TREES_FEATURE, "snow_under_trees");
 
 		isSereneSeasonsLoaded = platform.isModLoaded("sereneseasons");
+		isSnowyLoaded = platform.isModLoaded("snowy");
 		isDynamicTreesLoaded = platform.isModLoaded("dynamictrees");
 
 		if (platform.isModLoaded("snowrealmagic"))
@@ -110,6 +111,10 @@ public class SnowUnderTrees {
 		return isSereneSeasonsLoaded;
 	}
 
+	public static boolean isSnowyLoaded() {
+		return isSnowyLoaded;
+	}
+
 	public static boolean isDynamicTreesLoaded() {
 		return isDynamicTreesLoaded;
 	}
@@ -129,8 +134,14 @@ public class SnowUnderTrees {
 		return biomeHolder.unwrapKey().map(key -> Configuration.CONFIG.filteredBiomes.get().contains(key.identifier().toString())).orElse(false);
 	}
 
-	public static boolean shouldAddToBiome(Holder<Biome> biome, boolean hasPrecipitation, float temperature) {
-		if (!Configuration.CONFIG.enableBiomeFeature.get() || isFiltered(biome))
+	public static boolean shouldAddToBiome(boolean isAlwaysWinter, Holder<Biome> biome, boolean hasPrecipitation, float temperature) {
+		if (!Configuration.CONFIG.enableBiomeFeature.get())
+			return false;
+
+		if (isAlwaysWinter)
+			return true;
+
+		if (isFiltered(biome))
 			return false;
 
 		return isPrecipitationSnow(hasPrecipitation, temperature) || isManuallyAdded(biome);

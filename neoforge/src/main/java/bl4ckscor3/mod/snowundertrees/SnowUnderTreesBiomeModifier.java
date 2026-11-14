@@ -22,7 +22,7 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 		if (phase == Phase.ADD) {
 			ClimateSettingsBuilder climateSettings = builder.getClimateSettings();
 
-			if (SnowUnderTrees.shouldAddToBiome(biome, climateSettings.hasPrecipitation(), climateSettings.getTemperature()))
+			if (SnowUnderTrees.shouldAddToBiome(canSnowyModify(biome), biome, climateSettings.hasPrecipitation(), climateSettings.getTemperature()))
 				builder.getGenerationSettings().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, snowUnderTreesFeature);
 		}
 	}
@@ -30,5 +30,9 @@ public record SnowUnderTreesBiomeModifier(Holder<PlacedFeature> snowUnderTreesFe
 	@Override
 	public MapCodec<? extends BiomeModifier> codec() {
 		return MAP_CODEC;
+	}
+
+	private boolean canSnowyModify(Holder<Biome> biome) {
+		return SnowUnderTrees.isSnowyLoaded() && SnowyHandler.isActive(biome);
 	}
 }

@@ -10,6 +10,9 @@ issueTrackerURL="${source_link}/issues"
     logoFile="assets/${mod_id}/icon.png"
     authors="${mod_author}"
 
+[[mixins]]
+    config="${mod_id}.neoforge.mixins.json"
+
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
