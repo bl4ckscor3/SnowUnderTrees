@@ -8,6 +8,9 @@ import java.util.function.Consumer;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import bl4ckscor3.mod.snowundertrees.groundfinder.DynamicTreesGroundFinder;
+import bl4ckscor3.mod.snowundertrees.groundfinder.GroundFinder;
+import bl4ckscor3.mod.snowundertrees.groundfinder.VanillaGroundFinder;
 import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
 import bl4ckscor3.mod.snowundertrees.manager.SnowRealMagicManager;
 import bl4ckscor3.mod.snowundertrees.manager.VanillaManager;
@@ -51,7 +54,8 @@ public class SnowUnderTrees {
 	private static List<ResourceLocation> biomesToAddTo = new ArrayList<>();
 	private static SnowManager snowManager;
 	private static ChunkRunner chunkRunner;
-	private static boolean isSereneSeasonsLoaded, isSnowyLoaded, isDynamicTreesLoaded;
+	private static GroundFinder groundFinder;
+	private static boolean isSereneSeasonsLoaded, isSnowyLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
 	public SnowUnderTrees(IEventBus modEventBus, ModContainer modContainer) {
@@ -60,7 +64,6 @@ public class SnowUnderTrees {
 		BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 		isSereneSeasonsLoaded = ModList.get().isLoaded("sereneseasons");
 		isSnowyLoaded = ModList.get().isLoaded("snowy");
-		isDynamicTreesLoaded = ModList.get().isLoaded("dynamictrees");
 
 		if (ModList.get().isLoaded("snowrealmagic"))
 			snowManager = new SnowRealMagicManager();
@@ -76,6 +79,11 @@ public class SnowUnderTrees {
 			chunkRunner = MoonriseCompat::chunkRunner;
 		else
 			chunkRunner = (level, action) -> level.getChunkSource().chunkMap.getChunks().forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(action::accept));
+
+		if (ModList.get().isLoaded("dynamictrees"))
+			groundFinder = new DynamicTreesGroundFinder();
+		else
+			groundFinder = new VanillaGroundFinder();
 	}
 
 	public static void addSnowUnderTrees(ResourceLocation biomeName) {
@@ -127,8 +135,8 @@ public class SnowUnderTrees {
 		return isSnowyLoaded;
 	}
 
-	public static boolean isDynamicTreesLoaded() {
-		return isDynamicTreesLoaded;
+	public static BlockPos findGround(WorldGenLevel level, BlockPos.MutableBlockPos pos) {
+		return groundFinder.findGround(level, pos);
 	}
 
 	public static void runForChunks(ServerLevel level, Consumer<LevelChunk> action) {

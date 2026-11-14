@@ -34,12 +34,10 @@ public class SnowUnderTreesFeature extends Feature<NoneFeatureConfiguration> {
 				if (level.getBlockState(mPos).is(BlockTags.LEAVES)) {
 					mPos.setY(level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z));
 
-					if (SnowUnderTrees.isDynamicTreesLoaded()) {
-						BlockPos groundPos = DynamicTreesHandler.findGround(level, mPos);
+					BlockPos groundPos = SnowUnderTrees.findGround(level, mPos);
 
-						if (groundPos == null)
-							return false;
-					}
+					if (groundPos == null)
+						return false;
 
 					if (SnowUnderTrees.placeSnow(level, mPos)) {
 						BlockState stateBelow;
