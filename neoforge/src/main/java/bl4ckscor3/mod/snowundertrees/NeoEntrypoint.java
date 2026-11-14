@@ -8,7 +8,6 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 
 import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
-import bl4ckscor3.mod.snowundertrees.manager.VanillaManager;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -71,7 +70,6 @@ public class NeoEntrypoint implements Platform {
 
 	@Override
 	public SnowManager getSnowRealMagicManager() {
-		// FIXME: When Snow! Real Magic! is updated to 26.1.2 for NeoForge
-		return new VanillaManager();
+		return new NeoSnowRealMagicManager();
 	}
 }
