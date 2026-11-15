@@ -30,12 +30,12 @@ public class LevelTickHandler {
 		for (int i = 0; i < randomTickSpeed; i++) {
 			if (SnowUnderTrees.RANDOM.nextInt(48) == 0) {
 				BlockPos randomPos = level.getBlockRandomPos(chunkX, 0, chunkZ, 15);
+				BlockState stateBelowHeightmap = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below());
 
-				if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, randomPos).below()).is(BlockTags.LEAVES)) {
+				if (stateBelowHeightmap.is(BlockTags.LEAVES)) {
 					BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomPos);
 
-					if (SnowUnderTrees.isDynamicTreesLoaded())
-						pos = DynamicTreesHandler.findGround(level, pos.mutable());
+					pos = SnowUnderTrees.findGround(level, pos.mutable());
 
 					if (pos == null)
 						return;
