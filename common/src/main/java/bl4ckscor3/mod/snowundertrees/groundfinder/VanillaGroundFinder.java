@@ -1,20 +1,20 @@
-package bl4ckscor3.mod.snowundertrees;
-
-import com.dtteam.dynamictrees.data.tags.DTBlockTags;
+package bl4ckscor3.mod.snowundertrees.groundfinder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DynamicTreesHandler {
-	public static BlockPos findGround(WorldGenLevel level, BlockPos.MutableBlockPos pos) {
+public class VanillaGroundFinder implements GroundFinder {
+	@Override
+	public BlockPos findGround(WorldGenLevel level, BlockPos.MutableBlockPos pos) {
 		BlockState state;
 
 		pos.setY(pos.getY() - 1);
 		state = level.getBlockState(pos);
 
-		while (state.isAir() || state.is(DTBlockTags.BRANCHES) || state.is(DTBlockTags.LEAVES)) {
+		while (shouldContinueLookingForGround(state)) {
 			int newY = pos.getY() - 1;
 
 			if (newY < level.getMinY())
@@ -25,9 +25,21 @@ public class DynamicTreesHandler {
 		}
 
 		//make sure snow real magic still works by not moving the block position up when a flower/grass/etc. is at the position
-		if (!(state.is(DTBlockTags.FOLIAGE) || state.getBlock() == Blocks.SWEET_BERRY_BUSH))
+		if (!isVegetation(state))
 			pos.setY(pos.getY() + 1); //the block above the ground is needed, not the ground block itself
 
 		return pos;
+	}
+
+	public boolean isLog(BlockState state) {
+		return state.is(BlockTags.LOGS);
+	}
+
+	public boolean shouldContinueLookingForGround(BlockState state) {
+		return state.isAir() || state.is(BlockTags.LEAVES) || isLog(state);
+	}
+
+	public boolean isVegetation(BlockState state) {
+		return state.getBlock() == Blocks.SWEET_BERRY_BUSH;
 	}
 }

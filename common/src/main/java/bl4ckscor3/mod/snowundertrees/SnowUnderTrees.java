@@ -7,6 +7,9 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Iterables;
 
+import bl4ckscor3.mod.snowundertrees.groundfinder.DynamicTreesGroundFinder;
+import bl4ckscor3.mod.snowundertrees.groundfinder.GroundFinder;
+import bl4ckscor3.mod.snowundertrees.groundfinder.VanillaGroundFinder;
 import bl4ckscor3.mod.snowundertrees.manager.SnowManager;
 import bl4ckscor3.mod.snowundertrees.manager.VanillaManager;
 import net.minecraft.core.BlockPos;
@@ -30,7 +33,8 @@ public class SnowUnderTrees {
 	private static List<Identifier> biomesToAddTo = new ArrayList<>();
 	private static SnowManager snowManager;
 	private static ChunkRunner chunkRunner;
-	private static boolean isSereneSeasonsLoaded, isDynamicTreesLoaded;
+	private static GroundFinder groundFinder;
+	private static boolean isSereneSeasonsLoaded;
 	private static BiFunction<WorldGenLevel, BlockPos, Boolean> temperatureCheck;
 
 	public synchronized static void initialize(Platform platform) {
@@ -42,7 +46,6 @@ public class SnowUnderTrees {
 		platform.register(Registries.FEATURE_TYPE, () -> SnowUnderTreesFeature.CODEC, "snow_under_trees");
 
 		isSereneSeasonsLoaded = platform.isModLoaded("sereneseasons");
-		isDynamicTreesLoaded = platform.isModLoaded("dynamictrees");
 
 		if (platform.isModLoaded("snowrealmagic"))
 			snowManager = platform.getSnowRealMagicManager();
@@ -59,6 +62,10 @@ public class SnowUnderTrees {
 		else
 			chunkRunner = (level, action) -> Iterables.unmodifiableIterable(level.getChunkSource().chunkMap.visibleChunkMap.values()).forEach(chunkHolder -> chunkHolder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).ifSuccess(action::accept));
 
+		if (platform.isModLoaded("dynamictrees"))
+			groundFinder = new DynamicTreesGroundFinder();
+		else
+			groundFinder = new VanillaGroundFinder();
 	}
 
 	public static void addSnowUnderTrees(Identifier biomeName) {
@@ -106,8 +113,8 @@ public class SnowUnderTrees {
 		return isSereneSeasonsLoaded;
 	}
 
-	public static boolean isDynamicTreesLoaded() {
-		return isDynamicTreesLoaded;
+	public static BlockPos findGround(WorldGenLevel level, BlockPos.MutableBlockPos pos) {
+		return groundFinder.findGround(level, pos);
 	}
 
 	public static void runForChunks(ServerLevel level, Consumer<LevelChunk> action) {
